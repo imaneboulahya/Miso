@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Miso.</title>
+    <style>
+        body {
+            height: 100vh;
+        }
+        header {
+            position: relative;
+            z-index: 10;
+        }
+        .logo {
+            font-family: sans-serif;
+            font-size: 19px;
+            margin-left: 7px;
+        }
+        .header-btn {
+            background-color: #000;
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 10px 20px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            position: absolute;
+        }
+        .header-btn:hover {
+            background-color: #fff;
+            color: #000;
+        }
+        /*hada dyal about us*/
+        .btn-1 {
+            right: 50px;
+        }
+        /*hada dyal log in*/
+        .btn-2 {
+            right: 155px;
+        }
+        /*hada dyal sign up*/
+        .btn-3 {
+            right: 243px;
+        }
+        .search-bar {
+            z-index: 1;
+            max-width: 265px;
+            height: 30px;
+            width: 100%;
+            position: absolute;
+            right: 50px;
+            margin-top: 75px;
+            background-color: #b4b3b3;
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            color: black;
+        }
+        /*hada bach sawebna dak shape*/
+        .wavy-circle {
+            position: absolute;
+            /*hna ila bghito tbedlo size d shape*/
+            --s: 900px;
+            width: var(--s);
+            aspect-ratio: 1;
+            --g: /calc(var(--s)*0.303) calc(var(--s)*0.303) radial-gradient(50% 50%,#000 99%,#0000 101%) no-repeat;
+            mask: 
+                calc(50% + var(--s)*0.311) calc(50% + var(--s)*0) var(--g),
+                calc(50% + var(--s)*0.096) calc(50% + var(--s)*0.296) var(--g),
+                calc(50% + var(--s)*-0.252) calc(50% + var(--s)*0.183) var(--g),
+                calc(50% + var(--s)*-0.252) calc(50% + var(--s)*-0.183) var(--g),
+                calc(50% + var(--s)*0.096) calc(50% + var(--s)*-0.296) var(--g),
+                radial-gradient(calc(var(--s)*0.384),#000 99%,#0000 101%) subtract,
+                calc(50% + var(--s)*0.399) calc(50% + var(--s)*0.29) var(--g),
+                calc(50% + var(--s)*-0.153) calc(50% + var(--s)*0.47) var(--g),
+                calc(50% + var(--s)*-0.494) calc(50% + var(--s)*0) var(--g),
+                calc(50% + var(--s)*-0.153) calc(50% + var(--s)*-0.47) var(--g),
+                calc(50% + var(--s)*0.399) calc(50% + var(--s)*-0.29) var(--g);
+        }
+        /*hada dyal chakl li kaybedel lon*/
+        .wavy-circle-first {
+            z-index: -10;
+            background: #FF9FEE;
+            top: -240px;
+            left: -350px;
+            animation: ChangeColor 14s infinite;
+        }
+        /*had jouj homa dyal dak lkhet li f lkhel dayer b shape li mlewnna*/
+        .wavy-circle-second {
+            z-index: -20;
+            background: black;
+            top: -220px;
+            left: -340px;
+            animation: rotate 14s infinite;
+        }
+        .wavy-circle-third {
+            z-index: -20;
+            background: white;
+            top: -220px;
+            left: -340px;
+            animation: rotate 14s infinite;
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            14.28% { transform: rotate(51deg); }
+            28.56% { transform: rotate(102deg); }
+            42.84% { transform: rotate(153deg); }
+            57.12% { transform: rotate(204deg); }
+            71.40% { transform: rotate(255deg); }
+            85.68% { transform: rotate(306deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes ChangeColor {
+            0% { transform: rotate(0deg);
+                background: #FF9FEE; }
+            14.28% { background: #B3B0FF;
+                transform: rotate(51deg); }
+            28.56% { background: #FD0261;
+                transform: rotate(102deg); }
+            42.84% { background: #FF6F0F;
+                transform: rotate(153deg); }
+            57.12% { background: #A4A1AA;
+                transform: rotate(204deg); }
+            71.40% { background: #524F56;
+                transform: rotate(255deg); }
+            85.68% { background: #252275;
+                transform: rotate(306deg); }
+            100% { transform: rotate(360deg);
+                background: #FF9FEE; }
+        }
+        .main-content {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+        .welcome-text {
+            font-size: 33px;
+            font-family: sans-serif;
+            margin-left: 740px;
+            margin-top: 160px;
+        }
+        .button-container {
+            display: flex;
+            background-color: #D9D9D9;
+            width: 600px;
+            height: 40px;
+            align-items: center;
+            justify-content: space-around;
+            border-radius: 20px;
+            position: fixed;
+            top: 540px;
+            right: 35px;
+            z-index: 1;
+        }
+        .li-rak-fih {
+            font-size: 15px;
+            font-family: sans-serif;
+            background-color: black;
+            border: none;
+            height: 40px;
+            width: 270px;
+            position: absolute;
+            left: 20px;
+            color: white;
+            border-radius: 20px;
+        }
+        .Miso1 {
+            font-size: 3rem;
+            font-family: sans-serif;
+            position: absolute;
+            top: 0px;
+            left: 900px;
+            opacity: 100%;
+            animation: MisoColor 14s infinite;
+        }
+        .Miso2 {
+            font-size: 3rem;
+            font-family: sans-serif;
+            position: absolute;
+            top: 50px;
+            left: 900px;
+            opacity: 75%;
+            animation: MisoColor 14s infinite;
+        }
+        .Miso3 {
+            font-size: 3rem;
+            font-family: sans-serif;
+            position: absolute;
+            top: 100px;
+            left: 900px;
+            opacity: 50%;
+            animation: MisoColor 14s infinite;
+        }
+        @keyframes MisoColor {
+            0% {color: #FF9FEE; }
+            14.28% {color: #B3B0FF;}
+            28.56% {color: #FD0261;}
+            42.84% {color: #FF6F0F;}
+            57.12% {color: #A4A1AA;}
+            71.40% {color: #524F56;}
+            85.68% {color: #252275;}
+            100% {color: #FF9FEE;}
+        }
+        .home {
+            width: 23px;
+            height: 23px;
+            position: absolute;
+            left: 15px;
+            top: 8px;
+        }
+        .add {
+            width: 30px;
+            height: 30px;
+        }
+        .search {
+            width: 27px;
+            height: 27px;
+        }
+        .add-button {
+            width: 30px;
+            height: 30px;
+            background-color: transparent;
+            border: none;
+            position: absolute;
+            left: 325px;
+        }
+        .search-button {
+            width: 27px;
+            height: 27px;
+            background-color: transparent;
+            border: none;
+            position: absolute;
+            left: 390px;
+        }
+        .categories {
+            width: 30px;
+            height: 30px;
+        }
+        .categories-button {
+            width: 25px;
+            height: 25px;
+            background-color: transparent;
+            border: none;
+            position: absolute;
+            left: 450px;
+            top: 5px;
+        }
+        .user {
+            width: 29px;
+            height: 29px;
+        }
+        .user-button {
+            width: 30px;
+            height: 30px;
+            background-color: transparent;
+            border: none;
+            position: absolute;
+            left: 520px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wavy-circle-first wavy-circle"></div>
+    <div class="wavy-circle-second wavy-circle"></div>
+    <div class="wavy-circle-third wavy-circle"></div>
+    <header>
+        <span class="logo">Miso.</span>
+        <button class="header-btn btn-1">About us</button>
+        <button class="header-btn btn-2">Log in</button>
+        <button class="header-btn btn-3">Sign up</button>
+    </header>
+    <input placeholder="Search for articles..." class="search-bar" name="text" type="text">
+    <div class="main-content">
+        <p class="welcome-text">Welcome to</p>
+        <p class="Miso1">Miso.</p>
+        <p class="Miso2">Miso.</p>
+        <p class="Miso3">Miso.</p>
+        <div class="button-container">
+            <button class="li-rak-fih"><img src="icons/home.png" class="home">Home</button>
+            <button class="add-button"><img src="icons/add.png" class="add"></button>
+            <button class="search-button"><img src="icons/search-interface-symbol.png" class="search"></button>
+            <button class="categories-button"><img src="icons/application.png" class="categories"></button>
+            <button class="user-button"><img src="icons/profile-user.png" class="user"></button>
+        </div>
+    </div>
+</body>
+</html>
