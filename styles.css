@@ -10,7 +10,7 @@
             font-size: 23px;
             margin-left: 7px;
         }
-        .header-btn:hover {
+        .btn-2:hover {
             background-color: #fff;
             color: #000;
         }
@@ -116,9 +116,10 @@
         }
         .join {
             border: 2px solid#000;
-            position: absolute;
-            top: 380px;
-            left: 730px;
+            position: fixed;
+            top: 510px;
+            left: 950px;
+            z-index: 2;
         }
         .join:before {
             content: attr(alt);
@@ -247,14 +248,14 @@
             margin-top: 160px;
             position: absolute;
             top: -80px;
-            left: -20px;
+            left: -80px;
         }
         .Miso1 {
             font-size: 3rem;
             font-family: sans-serif;
             position: absolute;
             top: 70px;
-            left: 900px;
+            left: 850px;
             opacity: 100%;
             animation: MisoColor 14s infinite;
         }
@@ -263,7 +264,7 @@
             font-family: sans-serif;
             position: absolute;
             top: 120px;
-            left: 900px;
+            left: 850px;
             opacity: 75%;
             animation: MisoColor 14s infinite;
         }
@@ -272,9 +273,16 @@
             font-family: sans-serif;
             position: absolute;
             top: 170px;
-            left: 900px;
+            left: 850px;
             opacity: 50%;
             animation: MisoColor 14s infinite;
+        }
+        .z {
+            font-size: 2.5rem;
+            font-family: sans-serif;
+            position: absolute;
+            top: 240px;
+            left: 850px;
         }
         @keyframes MisoColor {
             0% {color: #FF9FEE; }
