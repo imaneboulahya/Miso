@@ -277,13 +277,6 @@
             opacity: 50%;
             animation: MisoColor 14s infinite;
         }
-        .z {
-            font-size: 2.5rem;
-            font-family: sans-serif;
-            position: absolute;
-            top: 240px;
-            left: 850px;
-        }
         @keyframes MisoColor {
             0% {color: #FF9FEE; }
             14.28% {color: #B3B0FF;}
@@ -377,4 +370,166 @@
                 calc(50% + var(--s)*-0.494) calc(50% + var(--s)*0) var(--g),
                 calc(50% + var(--s)*-0.153) calc(50% + var(--s)*-0.47) var(--g),
                 calc(50% + var(--s)*0.399) calc(50% + var(--s)*-0.29) var(--g);
+        }
+        /*tsawer li kaytbedlo*/
+        .animation-container {
+            position: relative;
+            z-index: 20;
+            width: 1400px;
+            height: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: transparent;
+            border-radius: 10px;
+        }
+        .picture-pair {
+            z-index: 100;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            animation: changer 14s infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+        .picture {
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            position: absolute;
+        }
+        @keyframes changer {
+            0% { opacity: 0; }
+            5% { opacity: 1; }
+            12% { opacity: 1; }
+            17% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+        .pair-1 { animation-delay: 0s; }
+        .pair-1 .picture-1 {
+            z-index: 1000;
+            width: 220px;
+            height: 270px;
+            left: 50px;
+            top: 60px;
+            background-image: url('star/cat2/motif\ 1\ 2.png');
+        }
+        .pair-1 .picture-2 {
+            width: 300px;
+            height: 200px;
+            top: 250px;
+            left: 150px;
+            background-image: url('star/cat2/motif\ 2\ 2.png');
+        }
+        .pair-2 { animation-delay: 2s; }
+        .pair-2 .picture-1 {
+            width: 438px;
+            height: 250px;
+            top: 100px;
+            right: 800px;
+            background-image: url('star/cat3/motif\ 1\ 3.png');
+        }
+        .pair-2 .picture-2 {
+            opacity: 95%;
+            width: 410px;
+            height: 370px;
+            top: 250px;
+            right: -100px;
+            background-image: url('star/cat3/motif\ 2\ 3.png');
+        }
+        .pair-3 { animation-delay: 4s; }
+        .pair-3 .picture-1 {
+            width: 500px;
+            height: 350px;
+            top: 100px;
+            right: 900px;
+            background-image: url('star/cat4/motif\ 1\ 4.png');
+        }
+        .pair-3 .picture-2 {
+            width: 480px;
+            height: 250px;
+            top: 320px;
+            right: 0px;
+            background-image: url('star/cat4/motif\ 2\ 4.png');
+        }
+        .pair-4 { animation-delay: 6s; }
+        .pair-4 .picture-1 {
+            width: 300px;
+            height: 450px;
+            top: 50px;
+            left: 150px;
+            background-image: url('star/cat5/motif\ 1\ 5.png');
+        }
+        .pair-4 .picture-2 {
+            width: 800px;
+            height: 300px;
+        }
+        .pair-5 { animation-delay: 8s; }
+        .pair-5 .picture-1 {
+            width: 300px;
+            height: 300px;
+            top: 50px;
+            left: 30px;
+            background-image: url('star/cat6/motif\ 1\ 6.png');
+        }
+        .pair-5 .picture-2 {
+            width: 400px;
+            height: 370px;
+            top: 200px;
+            left: 70px;
+            background-image: url('star/cat6/motif\ 2\ 6.png');
+        }
+        .pair-6 { animation-delay: 10s; }
+        .pair-6 .picture-1 {
+            width: 600px;
+            height: 500px;
+            top: ;
+            left: 0;
+            background-image: url('star/cat7/motif\ 1\ 7.png');
+        }
+        .pair-6 .picture-2 {
+            width: 930px;
+        }
+        .pair-7 { animation-delay: 12s; }
+        .pair-7 .picture-1 {
+            width: 300px;
+            height: 300px;
+            top: 50px;
+            left: 10px;
+            background-image: url('star/cat1/motif\ 1\ 1.png');
+        }
+        .pair-7 .picture-2 {
+            width: 450px;
+            height: 430px;
+            top: 180px;
+            left: 30px;
+            background-image: url('star/cat1/motif\ 2\ 1.png');
+        }
+        .jomla {
+            font-family: sans-serif;
+            font-size: 2rem;
+            background-color: #D9D9D9;
+            border: 2px solid black;
+            border-radius: 50px;
+            color: black;
+            width: 500px;
+            height: 40px;
+            text-align: center;
+            position: absolute;
+            left: 550px;
+            top: 200px;
+        }
+        .main-content {
+            position: relative;
+            z-index: 1;
+        }
+        .animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
         }
