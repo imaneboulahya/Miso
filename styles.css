@@ -1,20 +1,20 @@
         body {
+            overflow-x: hidden;
+            max-width: 100vw;
             height: 100vh;
         }
         header {
             position: relative;
             z-index: 10;
+            height: 60px;
+            width: 100%;
         }
         .logo {
             font-family: sans-serif;
-            font-size: 23px;
+            font-size: clamp(18px, 4vw, 23px);
             margin-left: 7px;
         }
-        .btn-2:hover {
-            background-color: #fff;
-            color: #000;
-        }
-        /*hada dyal sign up*/
+        /*sign up*/
         .btn-2 {
             background-color: black;
             color: white;
@@ -27,9 +27,11 @@
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
             position: absolute;
-            right: 38px;
+            right: clamp(20px, 3%, 38px);
+            top: 30%;
+            transform: translateY(-50%);
         }
-        /*hada dyal log in*/
+        /*log in*/
         .btn-3 {
             background-color: transparent;
             color: black;
@@ -40,10 +42,11 @@
             text-transform: uppercase;
             cursor: pointer;
             position: absolute;
-            right: 135px;
-            top: 2px;
+            right: clamp(100px, 14%, 135px);
+            top: 30%;
+            transform: translateY(-50%);
         }
-        /*hada dyal search*/
+        /*search*/
         .btn-4 {
             background-color: transparent;
             color: black;
@@ -54,10 +57,11 @@
             text-transform: uppercase;
             cursor: pointer;
             position: absolute;
-            right: 200px;
-            top: 2px;
+            right: clamp(155px, 20%, 200px);
+            top: 30%;
+            transform: translateY(-50%);
         }
-        /*hada dyal home*/
+        /*home*/
         .btn-5 {
             border-bottom: 2px solid black;
             border-top: none;
@@ -72,30 +76,37 @@
             text-transform: uppercase;
             cursor: pointer;
             position: absolute;
-            right: 280px;
-            top: 2px;
+            right: clamp(220px, 28%, 280px);
+            top: 30%;
+            transform: translateY(-50%);
         }
         /*hada bach sawebna dak shape*/
         .wavy-circle {
             position: absolute;
-            /*hna ila bghito tbedlo size d shape*/
-            --s: 900px;
+            --s: clamp(800px, 70vw, 900px);
             width: var(--s);
             aspect-ratio: 1;
             --g: /calc(var(--s)*0.303) calc(var(--s)*0.303) radial-gradient(50% 50%,#000 99%,#0000 101%) no-repeat;
             mask: 
-                calc(50% + var(--s)*0.311) calc(50% + var(--s)*0) var(--g),
-                calc(50% + var(--s)*0.096) calc(50% + var(--s)*0.296) var(--g),
-                calc(50% + var(--s)*-0.252) calc(50% + var(--s)*0.183) var(--g),
-                calc(50% + var(--s)*-0.252) calc(50% + var(--s)*-0.183) var(--g),
-                calc(50% + var(--s)*0.096) calc(50% + var(--s)*-0.296) var(--g),
-                radial-gradient(calc(var(--s)*0.384),#000 99%,#0000 101%) subtract,
-                calc(50% + var(--s)*0.399) calc(50% + var(--s)*0.29) var(--g),
-                calc(50% + var(--s)*-0.153) calc(50% + var(--s)*0.47) var(--g),
-                calc(50% + var(--s)*-0.494) calc(50% + var(--s)*0) var(--g),
-                calc(50% + var(--s)*-0.153) calc(50% + var(--s)*-0.47) var(--g),
-                calc(50% + var(--s)*0.399) calc(50% + var(--s)*-0.29) var(--g);
-        }
+              calc(50% + var(--s)*0.311) calc(50% + var(--s)*0) var(--g),
+              calc(50% + var(--s)*0.096) calc(50% + var(--s)*0.296) var(--g),
+              calc(50% + var(--s)*-0.252) calc(50% + var(--s)*0.183) var(--g),
+              calc(50% + var(--s)*-0.252) calc(50% + var(--s)*-0.183) var(--g),
+              calc(50% + var(--s)*0.096) calc(50% + var(--s)*-0.296) var(--g),
+              radial-gradient(calc(var(--s)*0.384),#000 99%,#0000 101%) subtract,
+              calc(50% + var(--s)*0.399) calc(50% + var(--s)*0.29) var(--g),
+              calc(50% + var(--s)*-0.153) calc(50% + var(--s)*0.47) var(--g),
+              calc(50% + var(--s)*-0.494) calc(50% + var(--s)*0) var(--g),
+              calc(50% + var(--s)*-0.153) calc(50% + var(--s)*-0.47) var(--g),
+              calc(50% + var(--s)*0.399) calc(50% + var(--s)*-0.29) var(--g);
+          }
+          .wavy-circle-first,
+          .wavy-circle-second,
+          .wavy-circle-third {
+            --offset: clamp(-200px, -30vw, -350px);
+            top: var(--offset);
+            left: var(--offset);
+          }
         /*join us*/ 
         .join {
             content: attr(alt);
@@ -120,6 +131,10 @@
             top: 510px;
             left: 950px;
             z-index: 2;
+            position: fixed;
+            top: clamp(300px, 55vh, 510px);
+            left: clamp(300px, 60vw, 950px);
+            width: clamp(200px, 40vw, 300px);
         }
         .join:before {
             content: attr(alt);
@@ -225,7 +240,7 @@
                 transform: rotate(51deg); }
             28.56% { background: #FD0261;
                 transform: rotate(102deg); }
-            42.84% { background: #FF6F0F;
+            42.84% { background: #aae354;
                 transform: rotate(153deg); }
             57.12% { background: #A4A1AA;
                 transform: rotate(204deg); }
@@ -249,12 +264,18 @@
             position: absolute;
             top: -80px;
             left: -80px;
+            font-size: clamp(20px, 4vw, 33px);
+            margin: 0;
+            position: absolute;
+            top: clamp(20px, 10vh, 160px);
+            left: clamp(200px, 40vw, 1300px);
         }
         .Miso1 {
             font-size: 3rem;
             font-family: sans-serif;
             position: absolute;
             top: 70px;
+            top: clamp(20px, 10vh, 70px);
             left: 850px;
             opacity: 100%;
             animation: MisoColor 14s infinite;
@@ -264,6 +285,7 @@
             font-family: sans-serif;
             position: absolute;
             top: 120px;
+            top: clamp(80px, 17vh, 140px);
             left: 850px;
             opacity: 75%;
             animation: MisoColor 14s infinite;
@@ -273,104 +295,77 @@
             font-family: sans-serif;
             position: absolute;
             top: 170px;
+            top: clamp(120px, 24vh, 195px);
             left: 850px;
             opacity: 50%;
             animation: MisoColor 14s infinite;
+        }
+        .Miso1, .Miso2, .Miso3 {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            left: clamp(310px, 52vw, 900px);
         }
         @keyframes MisoColor {
             0% {color: #FF9FEE; }
             14.28% {color: #B3B0FF;}
             28.56% {color: #FD0261;}
-            42.84% {color: #FF6F0F;}
+            42.84% {color: #aae354;}
             57.12% {color: #A4A1AA;}
             71.40% {color: #524F56;}
             85.68% {color: #252275;}
             100% {color: #FF9FEE;}
         }
         .card-container {
-            position: absolute;
-            top: 620px;
-            left: 40px;
+            position: relative;
+            top: auto;
+            left: auto;
             display: flex;
+            flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
             padding: 20px;
+            margin: 40px auto;
+            max-width: 1200px;
             font-family: sans-serif;
-            font-size: 20px;
-        }
-        .card1 {
-            width: 320px;
-            height: 350px;
+          }
+          .card1, .card2, .card3 {
+            width: clamp(280px, 30vw, 320px);
+            height: auto;
+            min-height: 350px;
             padding: 20px;
             color: rgb(0, 0, 0);
-            background: linear-gradient(#D9D9D9, #ffffff) padding-box,
-                linear-gradient(145deg, transparent 35%,#FF9FEE, #B3B0FF) border-box;
             border: 2px solid transparent;
             border-radius: 8px;
-        }
-        .card2 {
-            width: 320px;
-            height: 350px;
-            padding: 20px;
-            color: rgb(0, 0, 0);
-            background: linear-gradient(#D9D9D9, #ffffff) padding-box,
-                linear-gradient(145deg, transparent 35%,#FD0261, #FF6F0F) border-box;
-            border: 2px solid transparent;
-            border-radius: 8px;
-        }
-        .card3 {
-            width: 320px;
-            height: 350px;
-            padding: 20px;
-            color: rgb(0, 0, 0);
-            background: linear-gradient(#D9D9D9, #ffffff) padding-box,
-                linear-gradient(145deg, transparent 35%,#252275, #FF9FEE) border-box;
-            border: 2px solid transparent;
-            border-radius: 8px;
-        }
-        .footer {
-            position: absolute;
-            top: 1100px;
-            width: 1213px;
-            height: 100px;
+            background: 
+              linear-gradient(#D9D9D9, #ffffff) padding-box,
+              linear-gradient(145deg, transparent 35%, var(--color1), var(--color2)) border-box;
+          }
+          .card1 {
+            --color1: #FF9FEE;
+            --color2: #B3B0FF;
+          }
+          .card2 {
+            --color1: #FD0261;
+            --color2: #aae354;
+          }
+          .card3 {
+            --color1: #252275;
+            --color2: #FF9FEE;
+          }
+          .footer {
+            position: relative;
+            width: 100%;
+            max-width: 1213px;
+            height: auto;
+            min-height: 100px;
             background-color: #f8f8f8;
             text-align: center;
             padding: 20px;
             font-family: 'Arial', sans-serif;
             color: #555;
-            font-size: 15px;
+            font-size: clamp(13px, 2vw, 15px);
             border-top: 1px solid #eee;
-            margin-top: 40px;
-        }
-        /*second shape*/
-        .wavy-circle-first2 {
-            opacity: 40%;
-            z-index: -10;
-            background: #FF9FEE;
-            top: 200px;
-            left: 950px;
-            animation: ChangeColor 14s infinite;
-        }
-        .wavy-circle2 {
-            position: absolute;
-            /*hna ila bghito tbedlo size d shape*/
-            --s: 450px;
-            width: var(--s);
-            aspect-ratio: 1;
-            --g: /calc(var(--s)*0.303) calc(var(--s)*0.303) radial-gradient(50% 50%,#000 99%,#0000 101%) no-repeat;
-            mask: 
-                calc(50% + var(--s)*0.311) calc(50% + var(--s)*0) var(--g),
-                calc(50% + var(--s)*0.096) calc(50% + var(--s)*0.296) var(--g),
-                calc(50% + var(--s)*-0.252) calc(50% + var(--s)*0.183) var(--g),
-                calc(50% + var(--s)*-0.252) calc(50% + var(--s)*-0.183) var(--g),
-                calc(50% + var(--s)*0.096) calc(50% + var(--s)*-0.296) var(--g),
-                radial-gradient(calc(var(--s)*0.384),#000 99%,#0000 101%) subtract,
-                calc(50% + var(--s)*0.399) calc(50% + var(--s)*0.29) var(--g),
-                calc(50% + var(--s)*-0.153) calc(50% + var(--s)*0.47) var(--g),
-                calc(50% + var(--s)*-0.494) calc(50% + var(--s)*0) var(--g),
-                calc(50% + var(--s)*-0.153) calc(50% + var(--s)*-0.47) var(--g),
-                calc(50% + var(--s)*0.399) calc(50% + var(--s)*-0.29) var(--g);
-        }
+            margin: 40px auto 0;
+          }
         /*tsawer li kaytbedlo*/
         .animation-container {
             position: relative;
@@ -425,18 +420,18 @@
         }
         .pair-2 { animation-delay: 2s; }
         .pair-2 .picture-1 {
+            opacity: 90%;
             width: 438px;
             height: 250px;
-            top: 100px;
+            top: 50px;
             right: 800px;
             background-image: url('star/cat3/motif\ 1\ 3.png');
         }
         .pair-2 .picture-2 {
-            opacity: 95%;
             width: 410px;
             height: 370px;
             top: 250px;
-            right: -100px;
+            left: 0px;
             background-image: url('star/cat3/motif\ 2\ 3.png');
         }
         .pair-3 { animation-delay: 4s; }
@@ -447,24 +442,13 @@
             right: 900px;
             background-image: url('star/cat4/motif\ 1\ 4.png');
         }
-        .pair-3 .picture-2 {
-            width: 480px;
-            height: 250px;
-            top: 320px;
-            right: 0px;
-            background-image: url('star/cat4/motif\ 2\ 4.png');
-        }
         .pair-4 { animation-delay: 6s; }
         .pair-4 .picture-1 {
             width: 300px;
             height: 450px;
             top: 50px;
-            left: 150px;
+            left: 75px;
             background-image: url('star/cat5/motif\ 1\ 5.png');
-        }
-        .pair-4 .picture-2 {
-            width: 800px;
-            height: 300px;
         }
         .pair-5 { animation-delay: 8s; }
         .pair-5 .picture-1 {
@@ -485,12 +469,9 @@
         .pair-6 .picture-1 {
             width: 600px;
             height: 500px;
-            top: ;
-            left: 0;
+            top: 0px;
+            left: -300px;
             background-image: url('star/cat7/motif\ 1\ 7.png');
-        }
-        .pair-6 .picture-2 {
-            width: 930px;
         }
         .pair-7 { animation-delay: 12s; }
         .pair-7 .picture-1 {
@@ -498,12 +479,13 @@
             height: 300px;
             top: 50px;
             left: 10px;
+            opacity: 90%;
             background-image: url('star/cat1/motif\ 1\ 1.png');
         }
         .pair-7 .picture-2 {
             width: 450px;
             height: 430px;
-            top: 180px;
+            top: 170px;
             left: 30px;
             background-image: url('star/cat1/motif\ 2\ 1.png');
         }
