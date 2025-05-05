@@ -1,0 +1,269 @@
+* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+body {
+    margin: 0;
+    padding: 0;
+    padding-right: 20px;
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+.navbar {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: black;
+}
+.mi {
+    font-size: 1.5rem;
+    margin: .5rem;
+    color: black;
+    text-decoration: none;
+}
+.navbar-links {
+    height: 100%;
+}
+.navbar-links ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+.navbar-links li {
+    list-style: none;
+}
+.navbar-links li a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    padding: 1rem;
+}
+.toggle-button {
+    position: absolute;
+    top: .75rem;
+    right: 1rem;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+}
+.toggle-button .bar {
+    height: 3px;
+    width: 100%;
+    background-color: black;
+    border-radius: 10px;
+}
+@media (max-width: 800px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .toggle-button {
+        display: flex;
+    }
+    .navbar-links {
+        display: none;
+        width: 100%;
+    }
+    .navbar-links ul {
+        width: 100%;
+        flex-direction: column;
+    }
+    .navbar-links ul li {
+        text-align: center;
+    }
+    .navbar-links ul li a {
+        padding: .5rem 1rem;
+    }
+    .navbar-links.active {
+        display: flex;
+    }
+}
+.wavy-circle {
+    position: absolute;
+    --s: clamp(650px, 70vw, 900px);
+    width: var(--s);
+    aspect-ratio: 1;
+    --g: /calc(var(--s)*0.303) calc(var(--s)*0.303) radial-gradient(50% 50%,#000 99%,#0000 101%) no-repeat;
+    mask: 
+          calc(50% + var(--s)*0.311) calc(50% + var(--s)*0) var(--g),
+          calc(50% + var(--s)*0.096) calc(50% + var(--s)*0.296) var(--g),
+          calc(50% + var(--s)*-0.252) calc(50% + var(--s)*0.183) var(--g),
+          calc(50% + var(--s)*-0.252) calc(50% + var(--s)*-0.183) var(--g),
+          calc(50% + var(--s)*0.096) calc(50% + var(--s)*-0.296) var(--g),
+          radial-gradient(calc(var(--s)*0.384),#000 99%,#0000 101%) subtract,
+          calc(50% + var(--s)*0.399) calc(50% + var(--s)*0.29) var(--g),
+          calc(50% + var(--s)*-0.153) calc(50% + var(--s)*0.47) var(--g),
+          calc(50% + var(--s)*-0.494) calc(50% + var(--s)*0) var(--g),
+          calc(50% + var(--s)*-0.153) calc(50% + var(--s)*-0.47) var(--g),
+          calc(50% + var(--s)*0.399) calc(50% + var(--s)*-0.29) var(--g);
+}
+@media (min-width: 2000px) {
+    .wavy-circle {
+        --s: min(60vw, 1400px);
+    }
+    .wavy-circle-first,
+    .wavy-circle-second, .wavy-circle-third {
+        --offset: clamp(-350px, -20vw, -500px);
+    }
+}
+.wavy-circle-first, .wavy-circle-second, .wavy-circle-third {
+    --offset: clamp(-200px, -30vw, -350px);
+    top: var(--offset);
+    left: var(--offset);
+}
+/*hada dyal chakl li kaybedel lon*/
+.wavy-circle-first {
+    z-index: -10;
+    background: #FF9FEE;
+    top: -240px;
+    left: -350px;
+    animation: ChangeColor 14s infinite;
+}
+/*had jouj homa dyal dak lkhet li f lkhel dayer b shape li mlewnna*/
+.wavy-circle-second {
+    z-index: -20;
+    background: black;
+    top: -220px;
+    left: -340px;
+    animation: rotate 14s infinite;
+}
+.wavy-circle-third {
+    z-index: -20;
+    background: white;
+    top: -220px;
+    left: -340px;
+    animation: rotate 14s infinite;
+}
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    14.28% { transform: rotate(51deg); }
+    28.56% { transform: rotate(102deg); }
+    42.84% { transform: rotate(153deg); }
+    57.12% { transform: rotate(204deg); }
+    71.40% { transform: rotate(255deg); }
+    85.68% { transform: rotate(306deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes ChangeColor {
+    0% { transform: rotate(0deg);
+        background: #FF9FEE; }
+    14.28% { background: #B3B0FF;
+        transform: rotate(51deg); }
+    28.56% { background: #FD0261;
+        transform: rotate(102deg); }
+    42.84% { background: #aae354;
+        transform: rotate(153deg); }
+    57.12% { background: #A4A1AA;
+        transform: rotate(204deg); }
+    71.40% { background: #524F56;
+        transform: rotate(255deg); }
+    85.68% { background: #252275;
+        transform: rotate(306deg); }
+    100% { transform: rotate(360deg);
+        background: #FF9FEE; }
+}
+.editor-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 95%;
+    max-width: 95%;
+    margin: 20px;
+    transition: background 0.3s, color 0.3s;
+}
+#toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+#toolbar button, #toolbar select, #toolbar input[type="color"] {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+#toolbar button:hover {
+    background: #e0e0e0;
+}
+#title {
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    margin-bottom: 15px;
+    width: 100%;
+}
+#editor {
+    border: 1px solid #ccc;
+    padding: 15px;
+    min-height: 300px;
+    border-radius: 8px;
+    background: #fff;
+    outline: none;
+}
+#status-bar {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+}
+body.dark {
+    background-color: #1e1e1e;
+    color: #eee;
+}
+  body.dark .editor-container {
+    background-color: #2a2a2a;
+    color: #eee;
+}
+body.dark #editor {
+    background-color: #3a3a3a;
+    color: #eee;
+    border-color: #555;
+}
+  body.dark #toolbar button,
+  body.dark #toolbar select,
+  body.dark #toolbar input[type="color"] {
+    background-color: #444;
+    color: #eee;
+}
+/* Style for the share button */
+button.share-btn {
+    float: right;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin: 0 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}  
+button.share-btn:hover {
+    transform: translateY(-2px);
+}  
+button.share-btn:active {
+    transform: translateY(1px);
+}
+button.share-btn::before {
+    content: "↗ ";
+    font-size: 1.1em;
+}
+@media (max-width: 768px) {
+    button.share-btn {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+}

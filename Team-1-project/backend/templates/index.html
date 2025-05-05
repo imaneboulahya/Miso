@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miso</title>
+</head>
+<body>
+  <div class="fullscreen-loader">
+    <div class="welcome-message">Welcome</div>
+  </div>
+  <div class="wavy-circle-first wavy-circle"></div>
+  <div class="wavy-circle-second wavy-circle"></div>
+  <div class="wavy-circle-third wavy-circle"></div>
+  <nav class="navbar">
+    <a href="{{ url_for('home') }}" class="mi">Miso</a>
+    <a href="#" class="toggle-button">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </a>
+    <div class="navbar-links">
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('search_be') }}">Search</a></li>
+        <li><a href="{{ url_for('login') }}">Log in</a></li>
+        <li><a class="sign" href="{{ url_for('signup') }}">Sign up</a></li>
+      </ul>
+    </div>
+  </nav>
+  <section class="main">
+    <div class="main-content">
+      <h1>Share your voice <br>Discover new perspectives</h1>
+      <p class="slogan">Miso is where ideas meet readers. Write, read, and connect.</p>
+    </div>
+  </section>
+  <div style="display: flex; justify-content: center;" class="hc">
+    <a class="join-button" href="{{ url_for('signup') }}">Join us for Free</a>
+  </div>
+  <section class="categories">
+    <div class="categories-header">
+      <h2>Explore Topics</h2>
+      <p>Discover articles across diverse categories</p>
+    </div>
+    <div class="categories-grid">
+      {% for category in categories %}
+      <div class="category-card" style="--card-color: {{ category.color }};" 
+     onclick="window.location.href='{{ url_for('category_page', category_name=category.name) }}'">
+        <h3>{{ category.name|capitalize }}</h3>
+        <p class="category-desc">{{ category.description }}</p>
+        <span class="article-count">{{ category.article_count }} articles</span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="popular-articles">
+    <div class="section-header">
+      <h2>Most Popular Articles</h2>
+      <p>What others are reading right now</p>
+    </div>
+    <div class="articles-grid">
+      {% for article in articles %}
+      <div class="card">
+        <div class="header">
+          <div class="image" style="background-image: url('{{ url_for('static', filename=article.image_url) }}')">
+            <span class="tag">{{ article.category }}</span>
+          </div>
+          <div class="date">
+            <span>{{ article.date }}</span>
+          </div>
+        </div>
+        <div class="info">
+          <a href="{{ url_for('article', id=article.id) }}" class="block">
+            <span class="title">{{ article.title }}</span>
+          </a>
+          <p class="description">{{ article.excerpt }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('search_be') }}" class="view-all">View All Popular Articles →</a>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>Thank you for visiting our website! We appreciate your time and support.</p>
+    </div>
+  </footer>
+  </body>
+</html>

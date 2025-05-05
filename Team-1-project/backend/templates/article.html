@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/article.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/like.js') }}" defer></script>
+    <title>Miso - {{ article.title }}</title>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="mi" href="{{ url_for('home_after_login') }}">Miso</a>
+            <a href="#" class="toggle-button">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
+        <div class="navbar-links">
+            <ul>
+                <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                <li><a href="{{ url_for('search') }}">Search</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('create') }}">Create</a></li>
+                <li><a href="{{ url_for('logout') }}">Log out</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        {% if article.image_url and article.image_url != 'default_article.jpg' %}
+        <img src="{{ url_for('static', filename='uploads/' + article.image_url) }}" alt="{{ article.title }}" class="article-image">
+        {% else %}
+        <div class="article-image-placeholder" style="background-color: #f0f0f0; height: 300px; display: flex; align-items: center; justify-content: center;">
+            No image available
+        </div>
+        {% endif %}
+
+        <div class="article-meta">
+            <div>
+                <span class="category-badge" style="background-color: 
+                    {% if article.category == 'art' %}#FF9FEE
+                    {% elif article.category == 'culture' %}#B3B0FF
+                    {% elif article.category == 'sport' %}#FD0261
+                    {% elif article.category == 'economy' %}#aae354
+                    {% elif article.category == 'technology' %}#A4A1AA
+                    {% elif article.category == 'health' %}#524F56
+                    {% elif article.category == 'entrepreneurship' %}#252275
+                    {% else %}#91558e{% endif %};">
+                    {{ article.category|capitalize }}
+                </span>
+                <span>By {{ article.author.username }} • {{ article.date }}</span>
+            </div>
+            <div class="like-container" onclick="toggleLike({{ article.id }})">
+                <span class="like-count">{{ article.like_count }}</span>
+                <span class="like">{% if liked %}Liked{% else %}Like{% endif %}</span>
+            </div>
+        </div>
+        <h1 class="article-title">{{ article.title }}</h1>
+        <div class="article-content">
+            {{ article.content }}
+        </div>
+    </div>
+</body>
+</html>

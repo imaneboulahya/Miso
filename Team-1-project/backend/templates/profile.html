@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_page.css') }}">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+      <title>Miso | Profile</title>
+    </head>
+    <body>
+        <div class="wavy-circle-first wavy-circle"></div>
+        <div class="wavy-circle-second wavy-circle"></div>
+        <div class="wavy-circle-third wavy-circle"></div>
+        <nav class="navbar">
+          <a class="mi" href="{{ url_for('home_after_login') }}">Miso</a>
+            <a href="#" class="toggle-button">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
+            <div class="navbar-links">
+                <ul>
+                    <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                    <li><a href="{{ url_for('search') }}">Search</a></li>
+                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('create') }}">Create</a></li>
+                    <li><a href="{{ url_for('logout') }}">Log out</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="profile-card">
+            <div class="profile-content">
+                <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" 
+                     class="profile-picture"
+                     onerror="this.src='{{ url_for('static', filename='images/default-profile.jpg') }}'">
+                <div class="profile-info">
+                    <h1 class="user-name">{{ user.username }}</h1>
+                    <div class="stats">
+                        <span class="stat"><strong>{{ articles|length }}</strong> Articles</span>
+                        <div class="stat">
+                            <strong>{{ likes_count }}</strong> Likes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="popular-articles">
+            {% for row in articles|batch(3) %}
+            <div class="articles-grid">
+                {% for article in row %}
+                <div class="card">
+                    <div class="header">
+                        <div class="image" style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) }}')">
+                            <span class="tag">{{ article.category }}</span>
+                        </div>
+                        <div class="date">
+                            <span>{{ article.date }}</span>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <a href="{{ url_for('article', id=article.id) }}" class="block">
+                            <span class="title">{{ article.title }}</span>
+                        </a>
+                        <p class="description">{{ article.excerpt or article.content[:100] }}...</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </section>
+    </body>
+</html>

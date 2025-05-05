@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/search_page.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+        <title>Miso | Search</title>
+    </head>
+    <body>
+        <!--animation-->
+        <div class="wavy-circle-first wavy-circle"></div>
+        <div class="wavy-circle-second wavy-circle"></div>
+        <div class="wavy-circle-third wavy-circle"></div>
+        <nav class="navbar">
+            <a href="{{ url_for('home') }}" class="mi">
+                Miso
+            </a>
+            <a href="#" class="toggle-button">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
+            <div class="navbar-links">
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('search_be') }}" class="active">Search</a></li>
+                    <li><a href="{{ url_for('login') }}">Log in</a></li>
+                    <li><a class="sign" href="{{ url_for('signup') }}">Sign up</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="search-container">
+            <form action="{{ url_for('search_be') }}" method="GET">
+                <input type="text" name="q" placeholder="Search articles..." class="search-input" value="{{ query or '' }}">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
+        <div class="categories-nav">
+            <ul class="categories-list">
+                <li><a href="{{ url_for('search_be') }}" class="{% if not active_category %}active{% endif %}">All</a></li>
+                <li><a href="{{ url_for('category_be', category_name='art') }}" class="{% if active_category == 'art' %}active{% endif %}">Art</a></li>
+                <li><a href="{{ url_for('category_be', category_name='culture') }}" class="{% if active_category == 'culture' %}active{% endif %}">Culture</a></li>
+                <li><a href="{{ url_for('category_be', category_name='sport') }}" class="{% if active_category == 'sport' %}active{% endif %}">Sport</a></li>
+                <li><a href="{{ url_for('category_be', category_name='economy') }}" class="{% if active_category == 'economy' %}active{% endif %}">Economy</a></li>
+                <li><a href="{{ url_for('category_be', category_name='technology') }}" class="{% if active_category == 'technology' %}active{% endif %}">Technology</a></li>
+                <li><a href="{{ url_for('category_be', category_name='health') }}" class="{% if active_category == 'health' %}active{% endif %}">Health</a></li>
+                <li><a href="{{ url_for('category_be', category_name='entrepreneurship') }}" class="{% if active_category == 'entrepreneurship' %}active{% endif %}">Entrepreneurship</a></li>
+            </ul>
+        </div>
+        <section class="popular-articles">
+            {% if query or active_category %}
+                <div class="section-header">
+                    <h2>Search Results</h2>
+                    <p>
+                        {% if query %}For "{{ query }}"{% endif %}
+                        {% if active_category %}in {{ active_category|capitalize }}{% endif %}
+                    </p>
+                </div>
+            {% endif %}
+            <div class="articles-grid">
+                {% for article in results %}
+                <div class="card">
+                    <div class="header">
+                        <div class="image" style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) }}')">
+                            <span class="tag">{{ article.category|capitalize }}</span>
+                        </div>
+                        <div class="date">
+                            <span>{{ article.date }}</span>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <a href="{{ url_for('article', id=article.id) }}" class="block">
+                            <span class="title">{{ article.title }}</span>
+                        </a>
+                        <p class="description">{{ article.excerpt }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-results">
+                    <p>No articles found{% if query %} for "{{ query }}"{% endif %}.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </body>
+</html>

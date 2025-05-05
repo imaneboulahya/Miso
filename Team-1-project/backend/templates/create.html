@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+      <script src="{{ url_for('static', filename='js/create.js') }}" defer></script>
+      <title>Miso | Create</title>
+    </head>
+    <body>
+        <div class="wavy-circle-first wavy-circle"></div>
+        <div class="wavy-circle-second wavy-circle"></div>
+        <div class="wavy-circle-third wavy-circle"></div>
+        <nav class="navbar">
+            <a class="mi" href="{{ url_for('home_after_login') }}">Miso</a>
+            <a href="#" class="toggle-button">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
+            <div class="navbar-links">
+                <ul>
+                    <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                    <li><a href="{{ url_for('search') }}">Search</a></li>
+                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('create') }}">Create</a></li>
+                    <li><a href="{{ url_for('logout') }}">Log out</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="editor-container">
+            <form method="POST" action="{{ url_for('create') }}" id="article-form">
+                {{ form.hidden_tag() }}
+                <div id="toolbar">
+                  <button type="button" onclick="execCmd('bold')">Gras</button>
+                  <button type="button" onclick="execCmd('italic')">Italique</button>
+                  <button type="button" onclick="execCmd('underline')">Souligné</button>
+                  <button type="button" onclick="execCmd('strikeThrough')">Barré</button>
+                  <button type="button" onclick="execCmd('insertUnorderedList')">Puces</button>
+                  <button type="button" onclick="execCmd('insertOrderedList')">Numéros</button>
+                  <button type="button" onclick="insertLink()">Lien</button>
+                  <button type="button" onclick="insertImage()">Image</button>
+                  <button type="button" onclick="execCmd('removeFormat')">Effacer</button>
+                  <button type="button" onclick="toggleDarkMode()">Mode sombre</button>
+                  <select onchange="execCmdWithArg('fontName', this.value)">
+                     <option value="Arial">Arial</option>
+                     <option value="Georgia">Georgia</option>
+                     <option value="Courier New">Courier</option>
+                     <option value="Times New Roman">Times New Roman</option>
+                     <option value="Verdana">Verdana</option>
+                     <option value="Tahoma">Tahoma</option>
+                     <option value="Comic Sans MS">Comic Sans MS</option>
+                     <option value="Trebuchet MS">Trebuchet MS</option>
+                     <option value="Impact">Impact</option>
+                  </select>
+                  <select onchange="execCmdWithArg('fontSize', this.value)">
+                    <option value="2">Petit</option>
+                    <option value="4" selected>Moyen</option>
+                    <option value="6">Grand</option>
+                  </select>
+                  <input type="color" onchange="execCmdWithArg('foreColor', this.value)" title="Couleur du texte">
+                  <input type="color" onchange="execCmdWithArg('backColor', this.value)" title="Fond du texte">
+                </div>
+                <input type="text" id="title" name="title" placeholder="Titre du document" required>
+                <textarea id="content" name="content" style="display:none;"></textarea>
+                <div 
+                    id="editor" 
+                    contenteditable="true" 
+                    oninput="updateStatus()" 
+                    onfocus="clearPlaceholder()"
+                    onblur="restorePlaceholderIfEmpty()"
+                >
+                    Commencez à écrire votre article ici...
+                </div>
+                <div class="form-group">
+                    <textarea id="excerpt" name="excerpt" placeholder="Résumé court (optionnel)"></textarea>
+                </div>
+                <div class="form-group">
+                    <select id="category" name="category" required>
+                        <option value="">-- Choisir une catégorie --</option>
+                        <option value="art">Art</option>
+                        <option value="culture">Culture</option>
+                        <option value="sport">Sport</option>
+                        <option value="economy">Économie</option>
+                        <option value="technology">Technologie</option>
+                        <option value="health">Santé</option>
+                        <option value="entrepreneurship">Entrepreneuriat</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+                <div id="status-bar">
+                  <div id="word-count">0 mots, 0 caractères</div>
+                  <div id="last-modified">Dernière modification : -</div>
+                  <button type="submit" class="share-btn">Publier</button>
+                </div>
+            </form>
+        </div>
+        <script>
+            
+        </script>
+    </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/categories/art.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+      <title>Miso</title>
+    </head>
+    <body>
+        <div class="wavy-circle-first wavy-circle"></div>
+        <div class="wavy-circle-second wavy-circle"></div>
+        <div class="wavy-circle-third wavy-circle"></div>
+        <nav class="navbar">
+          <a href="{{ url_for('home_after_login') }}" class="mi">
+            Miso
+          </a>
+          <a href="#" class="toggle-button">
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+          </a>
+          <div class="navbar-links">
+              <ul>
+                  <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                  <li><a href="{{ url_for('search') }}">Search</a></li>
+                  <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                  <li><a href="{{ url_for('create') }}">Create</a></li>
+                  <li><a href="{{ url_for('logout') }}">Log out</a></li>
+              </ul>
+          </div>
+      </nav>
+      <div class="search-container">
+        <form action="{{ url_for('search') }}" method="GET">
+            <input type="text" name="q" placeholder="Search..." class="search-input" value="{{ query or '' }}">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+    <div class="categories-nav">
+        <ul class="categories-list">
+            <li><a href="{{ url_for('search') }}">All</a></li>
+            <li><a href="{{ url_for('category_page', category_name='art') }}">Art</a></li>
+            <li><a href="{{ url_for('category_page', category_name='culture') }}">Culture</a></li>
+            <li><a href="{{ url_for('category_page', category_name='sport') }}">Sport</a></li>
+            <li><a href="{{ url_for('category_page', category_name='economy') }}">Economy</a></li>
+            <li><a href="{{ url_for('category_page', category_name='technology') }}">Technology</a></li>
+            <li><a href="{{ url_for('category_page', category_name='health') }}">Health</a></li>
+            <li><a href="{{ url_for('category_page', category_name='entrepreneurship') }}" class="active">Entrepreneurship</a></li>
+        </ul>
+    </div>
+    <section class="popular-articles">
+        <div class="section-header">
+            <h2>Art Articles</h2>
+            <p>Explore creative expressions in art</p>
+        </div>
+        <div class="articles-grid">
+            {% for article in articles %}
+            <div class="card">
+                <div class="header">
+                    <div class="image" style="background-image: url('{{ url_for('static', filename=article.image_url) }}')">
+                        <span class="tag">{{ article.category }}</span>
+                    </div>
+                    <div class="date">
+                        <span>{{ article.date }}</span>
+                    </div>
+                </div>
+                <div class="info">
+                    <a href="{{ url_for('article', id=article.id) }}" class="block">
+                        <span class="title">{{ article.title }}</span>
+                    </a>
+                    <p class="description">{{ article.excerpt }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="no-results">
+                <p>No art articles found yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+</html>
