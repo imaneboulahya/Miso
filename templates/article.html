@@ -26,7 +26,6 @@
             </ul>
         </div>
     </nav>
-
     <div class="article-container">
         {% if article.image_url and article.image_url != 'default_article.jpg' %}
         <img src="{{ url_for('static', filename='uploads/' + article.image_url) }}" alt="{{ article.title }}" class="article-image">
@@ -35,7 +34,6 @@
             No image available
         </div>
         {% endif %}
-
         <div class="article-meta">
             <div>
                 <span class="category-badge" style="background-color: 
@@ -63,37 +61,35 @@
             {{ article.content }}
         </div>
     </div>
-<div class="comments-section">
-    <h3 class="comments-title">Comments</h3>
-    
-    {% if 'user_id' in session %}
-    <form class="comment-form" method="POST" action="{{ url_for('add_comment', article_id=article.id) }}">
-        <textarea name="comment_text" placeholder="Write your comment here..." required></textarea>
-        <button type="submit" class="submit-comment">Post Comment</button>
-    </form>
-    {% else %}
-    <div class="login-prompt">
-        <p>Please <a href="{{ url_for('login') }}">log in</a> to leave a comment.</p>
-    </div>
-    {% endif %}
-    
-    <div class="comments-list">
-        {% if article.comments %}
-            {% for comment in article.comments %}
-            <div class="comment">
-                <div class="comment-header">
-                    <span class="comment-author">{{ comment.author.username }}</span>
-                    <span class="comment-date">{{ comment.timestamp.strftime('%B %d, %Y at %H:%M') }}</span>
-                </div>
-                <div class="comment-content">
-                    {{ comment.text }}
-                </div>
-            </div>
-            {% endfor %}
+    <div class="comments-section">
+        <h3 class="comments-title">Comments</h3>
+        {% if 'user_id' in session %}
+        <form class="comment-form" method="POST" action="{{ url_for('add_comment', article_id=article.id) }}">
+            <textarea name="comment_text" placeholder="Write your comment here..." required></textarea>
+            <button type="submit" class="submit-comment">Post Comment</button>
+        </form>
         {% else %}
-            <div class="no-comments">No comments yet. Be the first to comment!</div>
+        <div class="login-prompt">
+            <p>Please <a href="{{ url_for('login') }}">log in</a> to leave a comment.</p>
+        </div>
         {% endif %}
+        <div class="comments-list">
+            {% if article.comments %}
+                {% for comment in article.comments %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-author">{{ comment.author.username }}</span>
+                        <span class="comment-date">{{ comment.timestamp.strftime('%B %d, %Y at %H:%M') }}</span>
+                    </div>
+                    <div class="comment-content">
+                        {{ comment.text }}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="no-comments">No comments yet. Be the first to comment!</div>
+            {% endif %}
+        </div>
     </div>
-</div>
 </body>
 </html>

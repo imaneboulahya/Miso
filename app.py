@@ -18,7 +18,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///miso.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
-app = Flask(__name__)
 db = SQLAlchemy(app)
 
 
@@ -26,6 +25,7 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
 class SignupForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4)])
     email = StringField('Email', validators=[DataRequired()])
@@ -34,16 +34,19 @@ class SignupForm(FlaskForm):
     profile_pic = FileField('Profile Picture', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
     ])
+    
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username already taken. Choose another.')
+    
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Email already registered.')
         if '@' not in email.data:
             raise ValidationError('Please enter a valid email address')
+
 class ArticleForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=200)])
     content = TextAreaField('Content', validators=[DataRequired()])
@@ -159,12 +162,10 @@ def search_be():
 def add_comment(article_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
     comment_text = request.form.get('comment_text')
     if not comment_text or len(comment_text.strip()) == 0:
         flash('Comment cannot be empty', 'danger')
         return redirect(url_for('article', id=article_id))
-    
     try:
         new_comment = Comment(
             text=comment_text,
@@ -177,7 +178,6 @@ def add_comment(article_id):
     except Exception as e:
         db.session.rollback()
         flash('Error adding comment', 'danger')
-    
     return redirect(url_for('article', id=article_id))
 
 @app.route('/search')
@@ -197,9 +197,6 @@ def search():
     if category:
         base_query = base_query.filter_by(category=category)
     articles = base_query.order_by(Article.id.desc()).paginate(page=page, per_page=9)
-    print(f"Found {len(articles)} articles")
-    for article in articles:
-        print(f" - {article.title} (ID: {article.id})")
     return render_template('search_page.html',
                          query=query,
                          results=articles.items,
@@ -218,7 +215,7 @@ def article(id):
     return render_template('article.html', 
                          article=article, 
                          liked=liked,
-                         current_user=current_user)
+                         current_user_id=session.get('user_id'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -228,9 +225,14 @@ def signup():
             profile_pic_filename = 'default.jpg'
             if form.profile_pic.data:
                 file = form.profile_pic.data
+                if file.filename == '':
+                    flash('No selected file', 'danger')
+                    return redirect(request.url)
                 filename = secure_filename(file.filename)
                 profile_pic_filename = f"{secrets.token_hex(8)}_{filename}"
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], profile_pic_filename))
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], profile_pic_filename)
+                os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+                file.save(file_path)
             hashed_pw = generate_password_hash(form.password.data)
             new_user = User(
                 username=form.username.data,
@@ -240,16 +242,9 @@ def signup():
             )
             db.session.add(new_user)
             db.session.commit()
-            hashed_pw = generate_password_hash(form.password.data)
-            new_user = User(
-                username=form.username.data,
-                email=form.email.data,
-                password=hashed_pw
-            )
-            db.session.add(new_user)
-            db.session.commit()
             session['user_id'] = new_user.id
             session['username'] = new_user.username
+            flash('Account created successfully!', 'success')
             return redirect(url_for('home_after_login'))
         except Exception as e:
             db.session.rollback()
@@ -277,8 +272,7 @@ def logout():
 @app.route('/create', methods=['GET', 'POST'])
 def create():
     if 'user_id' not in session:
-        return redirect(url_for('home_after_login'))
-    
+        return redirect(url_for('login'))
     form = ArticleForm()
     if form.validate_on_submit():
         try:
@@ -292,7 +286,7 @@ def create():
             db.session.add(new_article)
             db.session.commit()
             flash('Article published successfully!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('home_after_login'))
         except Exception as e:
             db.session.rollback()
             flash('Error publishing article. Please try again.', 'danger')
@@ -302,30 +296,22 @@ def create():
 def like_article(id):
     if 'user_id' not in session:
         return jsonify({'error': 'Not logged in'}), 401
-    
     article = Article.query.get_or_404(id)
-    user = User.query.get(session['user_id'])
-    
-    # Check if user already liked the article
+    user_id = session['user_id']
     existing_like = Like.query.filter_by(
-        user_id=user.id,
+        user_id=user_id,
         article_id=article.id
     ).first()
-    
     if existing_like:
-        # Unlike the article
         db.session.delete(existing_like)
         liked = False
     else:
-        # Like the article
-        new_like = Like(user_id=user.id, article_id=article.id)
+        new_like = Like(user_id=user_id, article_id=article.id)
         db.session.add(new_like)
         liked = True
-    
     db.session.commit()
-    
     return jsonify({
-        'likes': article.likes.count(),
+        'likes': len(article.likes),
         'liked': liked
     })
 
@@ -340,11 +326,11 @@ def category_page(category_name):
     category_meta = {
         'art': {'color': '#FF9FEE', 'description': 'Creative expressions'},
         'culture': {'color': '#B3B0FF', 'description': 'Global traditions'},
-        'sport': {'color': '##FD0261', 'description': 'Athletic excellence'},
+        'sport': {'color': '#FD0261', 'description': 'Athletic excellence'},
         'economy': {'color': '#aae354', 'description': 'Market dynamics'},
         'technology': {'color': '#A4A1AA', 'description': 'Digital innovations'},
         'health': {'color': '#524F56', 'description': 'Mind and body wellness'},
-        'entrepreneurship': {'color': '#252275', 'description': 'Startup journeyss'},
+        'entrepreneurship': {'color': '#252275', 'description': 'Startup journeys'},
         'other': {'color': '#91558e', 'description': 'Miscellaneous gems'}
     }
     return render_template(f'categories/{category_name}.html',
@@ -357,7 +343,6 @@ def category_page(category_name):
 def home_after_login():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
     categories = [
         {'name': 'art', 'description': 'Creative expressions', 'color': '#FF9FEE'},
         {'name': 'culture', 'description': 'Global traditions', 'color': '#B3B0FF'},
@@ -370,8 +355,8 @@ def home_after_login():
     ]
     for category in categories:
         category['article_count'] = Article.query.filter_by(category=category['name']).count()
-        articles = Article.query.order_by(Article.id.desc()).limit(6).all()
-    print(f"Articles fetched: {len(articles)}")
+    
+    articles = Article.query.order_by(Article.id.desc()).limit(6).all()
     return render_template('home_after_login.html', 
                          categories=categories,
                          articles=articles)
