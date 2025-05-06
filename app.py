@@ -158,6 +158,11 @@ def search_be():
                          active_category=category,
                          page=page)
 
+@app.route('/article_be/<int:id>')
+def article_be(id):
+    article = Article.query.get_or_404(id)
+    return render_template('article_be.html', article=article)
+
 @app.route('/article/<int:article_id>/comment', methods=['POST'])
 def add_comment(article_id):
     if 'user_id' not in session:
