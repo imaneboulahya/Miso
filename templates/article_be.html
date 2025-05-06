@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/article.css') }}">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/like.js') }}" defer></script>
     <title>Miso - {{ article.title }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/article.css') }}">
 </head>
 <body>
     <nav class="navbar">
-        <a class="mi" href="{{ url_for('home_after_login') }}">Miso</a>
+        <a class="mi" href="{{ url_for('home') }}">Miso</a>
         <a href="#" class="toggle-button">
             <span class="bar"></span>
             <span class="bar"></span>
@@ -18,77 +17,108 @@
         </a>
         <div class="navbar-links">
             <ul>
-              <li><a href="{{ url_for('home') }}">Home</a></li>
-              <li><a href="{{ url_for('search_be') }}">Search</a></li>
-              <li><a href="{{ url_for('login') }}">Log in</a></li>
-              <li><a class="sign" href="{{ url_for('signup') }}">Sign up</a></li>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                <li><a href="{{ url_for('login') }}">Log in</a></li>
+                <li><a href="{{ url_for('signup') }}" class="btn-signup">Sign up</a></li>
             </ul>
         </div>
     </nav>
-    <div class="article-container">
-        {% if article.image_url and article.image_url != 'default_article.jpg' %}
-        <img src="{{ url_for('static', filename='uploads/' + article.image_url) }}" alt="{{ article.title }}" class="article-image">
-        {% else %}
-        <div class="article-image-placeholder" style="background-color: #f0f0f0; height: 300px; display: flex; align-items: center; justify-content: center;">
-            No image available
-        </div>
-        {% endif %}
-        <div class="article-meta">
-            <div>
-                <span class="category-badge" style="background-color: 
-                    {% if article.category == 'art' %}#FF9FEE
-                    {% elif article.category == 'culture' %}#B3B0FF
-                    {% elif article.category == 'sport' %}#FD0261
-                    {% elif article.category == 'economy' %}#aae354
-                    {% elif article.category == 'technology' %}#A4A1AA
-                    {% elif article.category == 'health' %}#524F56
-                    {% elif article.category == 'entrepreneurship' %}#252275
-                    {% else %}#91558e{% endif %};">
-                    {{ article.category|capitalize }}
-                </span>
-                <span>By {{ article.author.username }} • {{ article.date }}</span>
-            </div>
-            <div class="like-container" onclick="toggleLike({{ article.id }})">
-                <span class="like-count">{{ article.likes|length }}</span>
-                <span class="like">
-                    {% if 'user_id' in session and liked %}Liked{% else %}Like{% endif %}
-                </span>
-            </div>
-        </div>
-        <h1 class="article-title">{{ article.title }}</h1>
-        <div class="article-content">
-            {{ article.content }}
-        </div>
-    </div>
-    <div class="comments-section">
-        <h3 class="comments-title">Comments</h3>
-        {% if 'user_id' in session %}
-        <form class="comment-form" method="POST" action="{{ url_for('add_comment', article_id=article.id) }}">
-            <textarea name="comment_text" placeholder="Write your comment here..." required></textarea>
-            <button type="submit" class="submit-comment">Post Comment</button>
-        </form>
-        {% else %}
-        <div class="login-prompt">
-            <p>Please <a href="{{ url_for('login') }}">log in</a> to leave a comment.</p>
-        </div>
-        {% endif %}
-        <div class="comments-list">
-            {% if article.comments %}
-                {% for comment in article.comments %}
-                <div class="comment">
-                    <div class="comment-header">
-                        <span class="comment-author">{{ comment.author.username }}</span>
-                        <span class="comment-date">{{ comment.timestamp.strftime('%B %d, %Y at %H:%M') }}</span>
+    <!-- Article Layout -->
+    <main class="article-page">
+        <div class="container">
+            <!-- Main Article Content -->
+            <article class="article-content">
+                <header class="article-header">
+                    <span class="category-badge" style="--category-color: 
+                        {% if article.category == 'art' %}#FF9FEE
+                        {% elif article.category == 'culture' %}#B3B0FF
+                        {% elif article.category == 'sport' %}#FD0261
+                        {% elif article.category == 'economy' %}#aae354
+                        {% elif article.category == 'technology' %}#A4A1AA
+                        {% elif article.category == 'health' %}#524F56
+                        {% elif article.category == 'entrepreneurship' %}#252275
+                        {% else %}#91558e{% endif %}">
+                        {{ article.category|capitalize }}
+                    </span>
+                    <h1>{{ article.title }}</h1>
+                    <div class="meta">
+                        <span>By {{ article.author.username }}</span>
+                        <span>{{ article.date }}</span>
+                        <button class="like-btn" onclick="toggleLike({{ article.id }})">
+                            <span class="like-count">{{ article.likes|length }}</span>
+                            <span class="like-text">{% if liked %}Liked{% else %}Like{% endif %}</span>
+                        </button>
                     </div>
-                    <div class="comment-content">
-                        {{ comment.text }}
+                </header>
+                <!-- Article Image -->
+                <div class="article-image">
+                    {% if article.image_url and article.image_url != 'default_article.jpg' %}
+                    <img src="{{ url_for('static', filename='uploads/' + article.image_url) }}" alt="{{ article.title }}">
+                    {% else %}
+                    <div class="image-placeholder">
+                        <span>No image available</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- Article Body -->
+                <div class="article-body">
+                    {{ article.content }}
+                </div>
+            </article>
+            <!-- Suggested Articles -->
+            <aside class="article-sidebar">
+                <div class="sidebar-card">
+                    <h3>You might also like</h3>
+                    <div class="suggested-articles">
+                        {% for suggested in suggested_articles %}
+                        <a href="{{ url_for('article_be', id=suggested.id) }}" class="suggested-article">
+                            {% if suggested.image_url and suggested.image_url != 'default_article.jpg' %}
+                            <img src="{{ url_for('static', filename='uploads/' + suggested.image_url) }}" alt="{{ suggested.title }}">
+                            {% else %}
+                            <div class="image-placeholder small"></div>
+                            {% endif %}
+                            <div class="article-info">
+                                <span class="category">{{ suggested.category|capitalize }}</span>
+                                <h4>{{ suggested.title|truncate(60) }}</h4>
+                                <span class="author">By {{ suggested.author.username }}</span>
+                            </div>
+                        </a>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
-                {% else %}
-                <div class="no-comments">No comments yet. Be the first to comment!</div>
-            {% endif %}
+            </aside>
         </div>
-    </div>
+    </main>
+    <!-- Comments Section -->
+    <section class="comments-section">
+        <div class="container">
+            <h2>Comments</h2>
+            <div class="login-prompt">
+                <p><a href="{{ url_for('login') }}">Log in</a> to view and post comments</p>
+            </div>
+            <div class="comments-list">
+                {% if article.comments %}
+                    {% for comment in article.comments %}
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="author">{{ comment.author.username }}</span>
+                            <span class="date">{{ comment.timestamp.strftime('%b %d, %Y') }}</span>
+                        </div>
+                        <div class="comment-body">
+                            {{ comment.text }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-comments">
+                        <p>No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

@@ -104,6 +104,19 @@ class Comment(db.Model):
     author = db.relationship('User', backref='comments')
     article = db.relationship('Article', backref='comments')
 
+def get_suggested_articles(article, limit=3):
+    same_category = Article.query.filter(
+        Article.category == article.category,
+        Article.id != article.id
+    ).order_by(db.func.random()).limit(2).all()
+    
+    random_article = Article.query.filter(
+        Article.id != article.id,
+        ~Article.id.in_([a.id for a in same_category])
+    ).order_by(db.func.random()).first()
+    
+    return same_category + ([random_article] if random_article else [])
+
 @app.route('/')
 def home():
     categories = [
@@ -161,16 +174,44 @@ def search_be():
 @app.route('/article_be/<int:id>')
 def article_be(id):
     article = Article.query.get_or_404(id)
-    return render_template('article_be.html', article=article)
+    suggested_articles = get_suggested_articles(article)
+    return render_template('article_be.html',
+                         article=article,
+                         suggested_articles=suggested_articles)
+
+@app.route('/check_auth')
+def check_auth():
+    return jsonify({'authenticated': 'user_id' in session})
+
+@app.route('/article/<int:id>')
+def article_view(id):
+    if 'user_id' not in session:
+        return redirect(url_for('article_be', id=id))
+    
+    article = Article.query.get_or_404(id)
+    liked = Like.query.filter_by(
+        user_id=session['user_id'],
+        article_id=article.id
+    ).first() is not None
+    
+    suggested_articles = get_suggested_articles(article)
+    
+    return render_template('article.html',
+                         article=article,
+                         liked=liked,
+                         suggested_articles=suggested_articles,
+                         current_user_id=session.get('user_id'))
 
 @app.route('/article/<int:article_id>/comment', methods=['POST'])
 def add_comment(article_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    
     comment_text = request.form.get('comment_text')
     if not comment_text or len(comment_text.strip()) == 0:
         flash('Comment cannot be empty', 'danger')
-        return redirect(url_for('article', id=article_id))
+        return redirect(url_for('article_view', id=article_id))
+    
     try:
         new_comment = Comment(
             text=comment_text,
@@ -183,15 +224,18 @@ def add_comment(article_id):
     except Exception as e:
         db.session.rollback()
         flash('Error adding comment', 'danger')
-    return redirect(url_for('article', id=article_id))
+    
+    return redirect(url_for('article_view', id=article_id))
 
 @app.route('/search')
 def search():
     if 'user_id' not in session:
         return redirect(url_for('search_be'))
+    
     query = request.args.get('q', '')
     category = request.args.get('category', '')
     page = request.args.get('page', 1, type=int)
+    
     base_query = Article.query
     if query:
         base_query = base_query.filter(
@@ -201,26 +245,13 @@ def search():
         )
     if category:
         base_query = base_query.filter_by(category=category)
+    
     articles = base_query.order_by(Article.id.desc()).paginate(page=page, per_page=9)
     return render_template('search_page.html',
                          query=query,
                          results=articles.items,
                          active_category=category,
                          page=page)
-
-@app.route('/article/<int:id>')
-def article(id):
-    article = Article.query.get_or_404(id)
-    liked = False
-    if 'user_id' in session:
-        liked = Like.query.filter_by(
-            user_id=session['user_id'],
-            article_id=article.id
-        ).first() is not None
-    return render_template('article.html', 
-                         article=article, 
-                         liked=liked,
-                         current_user_id=session.get('user_id'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -233,11 +264,14 @@ def signup():
                 if file.filename == '':
                     flash('No selected file', 'danger')
                     return redirect(request.url)
+                
                 filename = secure_filename(file.filename)
                 profile_pic_filename = f"{secrets.token_hex(8)}_{filename}"
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], profile_pic_filename)
+                
                 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
                 file.save(file_path)
+            
             hashed_pw = generate_password_hash(form.password.data)
             new_user = User(
                 username=form.username.data,
@@ -247,9 +281,9 @@ def signup():
             )
             db.session.add(new_user)
             db.session.commit()
+            
             session['user_id'] = new_user.id
             session['username'] = new_user.username
-            flash('Account created successfully!', 'success')
             return redirect(url_for('home_after_login'))
         except Exception as e:
             db.session.rollback()
@@ -278,6 +312,7 @@ def logout():
 def create():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    
     form = ArticleForm()
     if form.validate_on_submit():
         try:
@@ -301,12 +336,15 @@ def create():
 def like_article(id):
     if 'user_id' not in session:
         return jsonify({'error': 'Not logged in'}), 401
+    
     article = Article.query.get_or_404(id)
     user_id = session['user_id']
+    
     existing_like = Like.query.filter_by(
         user_id=user_id,
         article_id=article.id
     ).first()
+    
     if existing_like:
         db.session.delete(existing_like)
         liked = False
@@ -314,7 +352,9 @@ def like_article(id):
         new_like = Like(user_id=user_id, article_id=article.id)
         db.session.add(new_like)
         liked = True
+    
     db.session.commit()
+    
     return jsonify({
         'likes': len(article.likes),
         'liked': liked
@@ -327,6 +367,7 @@ def category_page(category_name):
         abort(404)
     if 'user_id' not in session:
         return redirect(url_for('category_be', category_name=category_name))
+    
     articles = Article.query.filter_by(category=category_name).order_by(Article.id.desc()).all()
     category_meta = {
         'art': {'color': '#FF9FEE', 'description': 'Creative expressions'},
@@ -348,6 +389,7 @@ def category_page(category_name):
 def home_after_login():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
     categories = [
         {'name': 'art', 'description': 'Creative expressions', 'color': '#FF9FEE'},
         {'name': 'culture', 'description': 'Global traditions', 'color': '#B3B0FF'},
@@ -358,6 +400,7 @@ def home_after_login():
         {'name': 'entrepreneurship', 'description': 'Startup journeys', 'color': '#252275'},
         {'name': 'other', 'description': 'Miscellaneous gems', 'color': '#91558e'}
     ]
+    
     for category in categories:
         category['article_count'] = Article.query.filter_by(category=category['name']).count()
     

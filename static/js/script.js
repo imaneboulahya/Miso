@@ -52,29 +52,34 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 3000);
 });
 function toggleLike(articleId) {
-  fetch(`/article/${articleId}/like`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      }
-  })
-  .then(response => response.json())
-  .then(data => {
-      const likeContainer = document.querySelector(`.like-container[onclick="toggleLike(${articleId})"]`);
-      const likeCount = likeContainer.querySelector('.like-count');
-      const likeText = likeContainer.querySelector('.like');
-      
-      likeCount.textContent = data.likes;
-      
-      if (likeText.textContent.trim() === 'Like') {
-          likeText.textContent = 'Liked';
-          likeText.classList.add('active');
-      } else {
-          likeText.textContent = 'Like';
-          likeText.classList.remove('active');
-      }
-  })
-  .catch(error => {
-      console.error('Error:', error);
-  });
+  // Check if user is logged in
+  fetch('/check_auth')
+      .then(response => response.json())
+      .then(data => {
+          if (!data.authenticated) {
+              window.location.href = '/login';
+              return;
+          }
+          
+          // Proceed with like/unlike
+          fetch(`/article/${articleId}/like`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          })
+          .then(response => response.json())
+          .then(data => {
+              const likeBtn = document.querySelector(`.like-btn[onclick="toggleLike(${articleId})"]`);
+              const likeCount = likeBtn.querySelector('.like-count');
+              const likeText = likeBtn.querySelector('.like-text');
+              
+              likeCount.textContent = data.likes;
+              likeText.textContent = data.liked ? 'Liked' : 'Like';
+              
+              // Visual feedback
+              likeBtn.classList.toggle('liked', data.liked);
+          })
+          .catch(error => console.error('Error:', error));
+      });
 }
