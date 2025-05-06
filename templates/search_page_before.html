@@ -33,6 +33,7 @@
         <div class="search-container">
             <form action="{{ url_for('search_be') }}" method="GET">
                 <input type="text" name="q" placeholder="Search articles..." class="search-input" value="{{ query or '' }}">
+                <input type="hidden" name="category" value="{{ active_category or '' }}">
                 <button type="submit" class="search-button">Search</button>
             </form>
         </div>
@@ -54,12 +55,18 @@
                     <h2>Search Results</h2>
                     <p>
                         {% if query %}For "{{ query }}"{% endif %}
+                        {% if query and active_category %} - {% endif %}
                         {% if active_category %}in {{ active_category|capitalize }}{% endif %}
                     </p>
                 </div>
+            {% else %}
+                <div class="section-header">
+                    <h2>Popular Articles</h2>
+                    <p>Browse our latest content</p>
+                </div>
             {% endif %}
             <div class="articles-grid">
-                {% for article in results %}
+                {% for article in articles %}
                 <div class="card">
                     <div class="header">
                         <div class="image" style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) }}')">
@@ -70,7 +77,7 @@
                         </div>
                     </div>
                     <div class="info">
-                        <a href="{{ url_for('article_view', id=article.id) }}" class="block">
+                        <a href="{{ url_for('article_be', id=article.id) }}" class="block">
                             <span class="title">{{ article.title }}</span>
                         </a>
                         <p class="description">{{ article.excerpt }}</p>
@@ -78,7 +85,7 @@
                 </div>
                 {% else %}
                 <div class="no-results">
-                    <p>No articles found{% if query %} for "{{ query }}"{% endif %}.</p>
+                    <p>No articles found{% if query %} for "{{ query }}"{% endif %}{% if active_category %} in {{ active_category|capitalize }}{% endif %}.</p>
                 </div>
                 {% endfor %}
             </div>

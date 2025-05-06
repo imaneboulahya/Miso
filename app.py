@@ -140,10 +140,24 @@ def category_be(category_name):
                        'technology', 'health', 'entrepreneurship', 'other']
     if category_name not in valid_categories:
         abort(404)
-    articles = Article.query.filter_by(category=category_name).order_by(Article.id.desc()).all()
+    articles = Article.query.filter_by(category=category_name)\
+                          .order_by(Article.id.desc())\
+                          .all()
+    category_meta = {
+        'art': {'color': '#FF9FEE', 'description': 'Creative expressions'},
+        'culture': {'color': '#B3B0FF', 'description': 'Global traditions'},
+        'sport': {'color': '#FD0261', 'description': 'Athletic excellence'},
+        'economy': {'color': '#aae354', 'description': 'Market dynamics'},
+        'technology': {'color': '#A4A1AA', 'description': 'Digital innovations'},
+        'health': {'color': '#524F56', 'description': 'Mind and body wellness'},
+        'entrepreneurship': {'color': '#252275', 'description': 'Startup journeys'},
+        'other': {'color': '#91558e', 'description': 'Miscellaneous gems'}
+    }
     return render_template('search_page_before.html',
                          articles=articles,
                          active_category=category_name,
+                         category_color=category_meta[category_name]['color'],
+                         category_description=category_meta[category_name]['description'],
                          query=None,
                          page=1)
 
@@ -152,24 +166,30 @@ def search_be():
     if request.method == 'POST':
         query = request.form.get('q', '')
         return redirect(url_for('search_be', q=query))
+    
     query = request.args.get('q', '')
     category = request.args.get('category', '')
-    page = request.args.get('page', 1, type=int)
+    
     base_query = Article.query
+    
+    # Only apply category filter if a specific category is selected
+    if category and category.lower() != 'all':
+        base_query = base_query.filter_by(category=category)
+    
     if query:
         base_query = base_query.filter(
             (Article.title.ilike(f'%{query}%')) | 
             (Article.content.ilike(f'%{query}%')) |
             (Article.category.ilike(f'%{query}%'))
         )
-    if category:
-        base_query = base_query.filter_by(category=category)
-    articles = base_query.order_by(Article.id.desc()).paginate(page=page, per_page=9)
+    
+    # Get all articles (no pagination)
+    articles = base_query.order_by(Article.id.desc()).all()
+    
     return render_template('search_page_before.html',
+                         articles=articles,
                          query=query,
-                         results=articles.items,
-                         active_category=category,
-                         page=page)
+                         active_category=category)
 
 @app.route('/article_be/<int:id>')
 def article_be(id):
@@ -187,15 +207,12 @@ def check_auth():
 def article_view(id):
     if 'user_id' not in session:
         return redirect(url_for('article_be', id=id))
-    
     article = Article.query.get_or_404(id)
     liked = Like.query.filter_by(
         user_id=session['user_id'],
         article_id=article.id
     ).first() is not None
-    
     suggested_articles = get_suggested_articles(article)
-    
     return render_template('article.html',
                          article=article,
                          liked=liked,
@@ -206,12 +223,10 @@ def article_view(id):
 def add_comment(article_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
     comment_text = request.form.get('comment_text')
     if not comment_text or len(comment_text.strip()) == 0:
         flash('Comment cannot be empty', 'danger')
         return redirect(url_for('article_view', id=article_id))
-    
     try:
         new_comment = Comment(
             text=comment_text,
@@ -224,18 +239,15 @@ def add_comment(article_id):
     except Exception as e:
         db.session.rollback()
         flash('Error adding comment', 'danger')
-    
     return redirect(url_for('article_view', id=article_id))
 
 @app.route('/search')
 def search():
     if 'user_id' not in session:
         return redirect(url_for('search_be'))
-    
     query = request.args.get('q', '')
     category = request.args.get('category', '')
     page = request.args.get('page', 1, type=int)
-    
     base_query = Article.query
     if query:
         base_query = base_query.filter(
@@ -245,7 +257,6 @@ def search():
         )
     if category:
         base_query = base_query.filter_by(category=category)
-    
     articles = base_query.order_by(Article.id.desc()).paginate(page=page, per_page=9)
     return render_template('search_page.html',
                          query=query,
@@ -264,14 +275,11 @@ def signup():
                 if file.filename == '':
                     flash('No selected file', 'danger')
                     return redirect(request.url)
-                
                 filename = secure_filename(file.filename)
                 profile_pic_filename = f"{secrets.token_hex(8)}_{filename}"
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], profile_pic_filename)
-                
                 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
                 file.save(file_path)
-            
             hashed_pw = generate_password_hash(form.password.data)
             new_user = User(
                 username=form.username.data,
@@ -281,7 +289,6 @@ def signup():
             )
             db.session.add(new_user)
             db.session.commit()
-            
             session['user_id'] = new_user.id
             session['username'] = new_user.username
             return redirect(url_for('home_after_login'))
@@ -312,7 +319,6 @@ def logout():
 def create():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
     form = ArticleForm()
     if form.validate_on_submit():
         try:
@@ -336,15 +342,12 @@ def create():
 def like_article(id):
     if 'user_id' not in session:
         return jsonify({'error': 'Not logged in'}), 401
-    
     article = Article.query.get_or_404(id)
     user_id = session['user_id']
-    
     existing_like = Like.query.filter_by(
         user_id=user_id,
         article_id=article.id
     ).first()
-    
     if existing_like:
         db.session.delete(existing_like)
         liked = False
@@ -352,9 +355,7 @@ def like_article(id):
         new_like = Like(user_id=user_id, article_id=article.id)
         db.session.add(new_like)
         liked = True
-    
     db.session.commit()
-    
     return jsonify({
         'likes': len(article.likes),
         'liked': liked
@@ -367,7 +368,6 @@ def category_page(category_name):
         abort(404)
     if 'user_id' not in session:
         return redirect(url_for('category_be', category_name=category_name))
-    
     articles = Article.query.filter_by(category=category_name).order_by(Article.id.desc()).all()
     category_meta = {
         'art': {'color': '#FF9FEE', 'description': 'Creative expressions'},
@@ -389,7 +389,6 @@ def category_page(category_name):
 def home_after_login():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
     categories = [
         {'name': 'art', 'description': 'Creative expressions', 'color': '#FF9FEE'},
         {'name': 'culture', 'description': 'Global traditions', 'color': '#B3B0FF'},
@@ -400,10 +399,8 @@ def home_after_login():
         {'name': 'entrepreneurship', 'description': 'Startup journeys', 'color': '#252275'},
         {'name': 'other', 'description': 'Miscellaneous gems', 'color': '#91558e'}
     ]
-    
     for category in categories:
         category['article_count'] = Article.query.filter_by(category=category['name']).count()
-    
     articles = Article.query.order_by(Article.id.desc()).limit(6).all()
     return render_template('home_after_login.html', 
                          categories=categories,
@@ -413,12 +410,12 @@ def home_after_login():
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    
     user = User.query.get(session['user_id'])
     articles = Article.query.filter_by(author_id=user.id).order_by(Article.id.desc()).all()
     return render_template('profile.html', 
                          user=user,
                          articles=articles)
+
 
 if __name__ == '__main__':
     with app.app_context():
