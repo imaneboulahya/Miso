@@ -14,7 +14,7 @@
         <div class="wavy-circle-third wavy-circle"></div>
         <nav class="navbar">
             <a href="{{ url_for('home') }}" class="mi">
-                Miso
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
             </a>
             <a href="#" class="toggle-button">
                 <span class="bar"></span>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="info">
-                        <a href="{{ url_for('article', id=article.id) }}" class="block">
+                        <a href="{{ url_for('article_view', id=article.id) }}" class="block">
                             <span class="title">{{ article.title }}</span>
                         </a>
                         <p class="description">{{ article.excerpt }}</p>

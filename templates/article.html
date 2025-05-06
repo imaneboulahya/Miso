@@ -10,7 +10,9 @@
 </head>
 <body>
     <nav class="navbar">
-        <a class="mi" href="{{ url_for('home_after_login') }}">Miso</a>
+        <a href="{{ url_for('home') }}" class="mi">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
+        </a>
         <a href="#" class="toggle-button">
             <span class="bar"></span>
             <span class="bar"></span>
