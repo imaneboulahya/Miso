@@ -1,5 +1,6 @@
 from flask_wtf.file import FileField, FileAllowed
 from werkzeug.utils import secure_filename
+from flask import jsonify
 from flask import Flask, render_template, redirect, url_for, request, flash, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,6 +18,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///miso.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+app = Flask(__name__)
 db = SQLAlchemy(app)
 
 
@@ -66,6 +68,12 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     profile_pic = db.Column(db.String(200), default='default.jpg')
     articles = db.relationship('Article', backref='author', lazy=True)
+    liked_articles = db.relationship(
+        'Like',
+        backref='user',
+        lazy=True,
+        foreign_keys='Like.user_id'
+    )
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -147,6 +155,31 @@ def search_be():
                          active_category=category,
                          page=page)
 
+@app.route('/article/<int:article_id>/comment', methods=['POST'])
+def add_comment(article_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    comment_text = request.form.get('comment_text')
+    if not comment_text or len(comment_text.strip()) == 0:
+        flash('Comment cannot be empty', 'danger')
+        return redirect(url_for('article', id=article_id))
+    
+    try:
+        new_comment = Comment(
+            text=comment_text,
+            author_id=session['user_id'],
+            article_id=article_id
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        flash('Comment added successfully', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error adding comment', 'danger')
+    
+    return redirect(url_for('article', id=article_id))
+
 @app.route('/search')
 def search():
     if 'user_id' not in session:
@@ -176,7 +209,16 @@ def search():
 @app.route('/article/<int:id>')
 def article(id):
     article = Article.query.get_or_404(id)
-    return render_template('article.html', article=article)
+    liked = False
+    if 'user_id' in session:
+        liked = Like.query.filter_by(
+            user_id=session['user_id'],
+            article_id=article.id
+        ).first() is not None
+    return render_template('article.html', 
+                         article=article, 
+                         liked=liked,
+                         current_user=current_user)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -260,8 +302,32 @@ def create():
 def like_article(id):
     if 'user_id' not in session:
         return jsonify({'error': 'Not logged in'}), 401
+    
     article = Article.query.get_or_404(id)
-    return jsonify({'likes': article.likes.count()})
+    user = User.query.get(session['user_id'])
+    
+    # Check if user already liked the article
+    existing_like = Like.query.filter_by(
+        user_id=user.id,
+        article_id=article.id
+    ).first()
+    
+    if existing_like:
+        # Unlike the article
+        db.session.delete(existing_like)
+        liked = False
+    else:
+        # Like the article
+        new_like = Like(user_id=user.id, article_id=article.id)
+        db.session.add(new_like)
+        liked = True
+    
+    db.session.commit()
+    
+    return jsonify({
+        'likes': article.likes.count(),
+        'liked': liked
+    })
 
 @app.route('/category/<category_name>')
 def category_page(category_name):

@@ -52,8 +52,10 @@
                 <span>By {{ article.author.username }} • {{ article.date }}</span>
             </div>
             <div class="like-container" onclick="toggleLike({{ article.id }})">
-                <span class="like-count">{{ article.like_count }}</span>
-                <span class="like">{% if liked %}Liked{% else %}Like{% endif %}</span>
+                <span class="like-count">{{ article.likes|length }}</span>
+                <span class="like">
+                    {% if 'user_id' in session and liked %}Liked{% else %}Like{% endif %}
+                </span>
             </div>
         </div>
         <h1 class="article-title">{{ article.title }}</h1>
@@ -61,5 +63,37 @@
             {{ article.content }}
         </div>
     </div>
+<div class="comments-section">
+    <h3 class="comments-title">Comments</h3>
+    
+    {% if 'user_id' in session %}
+    <form class="comment-form" method="POST" action="{{ url_for('add_comment', article_id=article.id) }}">
+        <textarea name="comment_text" placeholder="Write your comment here..." required></textarea>
+        <button type="submit" class="submit-comment">Post Comment</button>
+    </form>
+    {% else %}
+    <div class="login-prompt">
+        <p>Please <a href="{{ url_for('login') }}">log in</a> to leave a comment.</p>
+    </div>
+    {% endif %}
+    
+    <div class="comments-list">
+        {% if article.comments %}
+            {% for comment in article.comments %}
+            <div class="comment">
+                <div class="comment-header">
+                    <span class="comment-author">{{ comment.author.username }}</span>
+                    <span class="comment-date">{{ comment.timestamp.strftime('%B %d, %Y at %H:%M') }}</span>
+                </div>
+                <div class="comment-content">
+                    {{ comment.text }}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-comments">No comments yet. Be the first to comment!</div>
+        {% endif %}
+    </div>
+</div>
 </body>
 </html>

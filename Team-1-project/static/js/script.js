@@ -51,3 +51,30 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('.fullscreen-loader').remove();
   }, 3000);
 });
+function toggleLike(articleId) {
+  fetch(`/article/${articleId}/like`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+  .then(response => response.json())
+  .then(data => {
+      const likeContainer = document.querySelector(`.like-container[onclick="toggleLike(${articleId})"]`);
+      const likeCount = likeContainer.querySelector('.like-count');
+      const likeText = likeContainer.querySelector('.like');
+      
+      likeCount.textContent = data.likes;
+      
+      if (likeText.textContent.trim() === 'Like') {
+          likeText.textContent = 'Liked';
+          likeText.classList.add('active');
+      } else {
+          likeText.textContent = 'Like';
+          likeText.classList.remove('active');
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}
