@@ -64,10 +64,10 @@
                 </div>
             {% endif %}
             <div class="articles-grid">
-                {% for article in articles %}
+                {% for article in results %}
                 <div class="card">
                     <div class="header">
-                        <div class="image" style="background-image: url('{{ url_for('static', filename=article.image_url) }}')">
+                        <div class="image" style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) if article.image_url != 'default_article.jpg' else url_for('static', filename='images/default_article.jpg') }}')">
                             <span class="tag">{{ article.category|capitalize }}</span>
                         </div>
                         <div class="date">
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                     <div class="info">
-                        <a href="{{ url_for('article', id=article.id) }}" class="block">
+                        <a href="{{ url_for('article_view', id=article.id) }}" class="block">
                             <span class="title">{{ article.title }}</span>
                         </a>
                         <p class="description">{{ article.excerpt }}</p>
@@ -88,14 +88,14 @@
                 {% endfor %}
             </div>
         </section>
-        {% if articles|length >= 9 %}
+        {% if results.pages > 1 %}
         <div class="pagination">
-            {% if page > 1 %}
-                <a href="{{ url_for('search', q=query, category=active_category, page=page-1) }}" class="page-link">Previous</a>
+            {% if results.has_prev %}
+                <a href="{{ url_for('search', q=query, category=active_category, page=results.prev_num) }}" class="page-link">Previous</a>
             {% endif %}
-            <span class="current-page">Page {{ page }}</span>
-            {% if articles|length == 9 %}
-                <a href="{{ url_for('search', q=query, category=active_category, page=page+1) }}" class="page-link">Next</a>
+            <span class="current-page">Page {{ results.page }} of {{ results.pages }}</span>
+            {% if results.has_next %}
+                <a href="{{ url_for('search', q=query, category=active_category, page=results.next_num) }}" class="page-link">Next</a>
             {% endif %}
         </div>
         {% endif %}

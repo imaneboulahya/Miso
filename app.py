@@ -243,19 +243,22 @@ def search():
     query = request.args.get('q', '')
     category = request.args.get('category', '')
     page = request.args.get('page', 1, type=int)
+    
     base_query = Article.query
+    if category:
+        base_query = base_query.filter_by(category=category)
     if query:
         base_query = base_query.filter(
             (Article.title.ilike(f'%{query}%')) | 
             (Article.content.ilike(f'%{query}%')) |
             (Article.category.ilike(f'%{query}%'))
         )
-    if category:
-        base_query = base_query.filter_by(category=category)
-    articles = base_query.order_by(Article.id.desc()).paginate(page=page, per_page=9)
+    
+    results = base_query.order_by(Article.id.desc()).paginate(page=page, per_page=9)
+    
     return render_template('search_page.html',
                          query=query,
-                         results=articles.items,
+                         results=results,
                          active_category=category,
                          page=page)
 
