@@ -319,7 +319,8 @@ body {
     }
 }
 .settings-toggle {
-    position: fixed;
+    position: relative;
+    float: right;
     top: 100px;
     right: 20px;
     background: rgb(164, 164, 164);
@@ -341,7 +342,8 @@ body {
 }
 .settings-panel {
     display: none;
-    position: fixed;
+    position: relative;
+    float: right;
     top: 150px;
     right: 20px;
     background: white;
