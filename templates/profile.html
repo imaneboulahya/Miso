@@ -12,7 +12,7 @@
         <div class="wavy-circle-second wavy-circle"></div>
         <div class="wavy-circle-third wavy-circle"></div>
         <nav class="navbar">
-            <a href="{{ url_for('home') }}" class="mi">
+            <a href="{{ url_for('home_after_login') }}" class="mi">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
             </a>
             <a href="#" class="toggle-button">
@@ -24,12 +24,31 @@
                 <ul>
                     <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
                     <li><a href="{{ url_for('search') }}">Search</a></li>
-                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('profile') }}" class="active">Profile</a></li>
                     <li><a href="{{ url_for('create') }}">Create</a></li>
                     <li><a href="{{ url_for('logout') }}">Log out</a></li>
                 </ul>
             </div>
         </nav>
+        <button class="settings-toggle" onclick="toggleSettings()">⚙️</button>
+        <div class="settings-panel" id="settingsPanel">
+            <h2>Account Settings</h2>
+            <form method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="profile_pic">Profile Picture</label>
+                    <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
+                    <small>Max 2MB (JPG, PNG)</small>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="save-btn">Save Changes</button>
+                    <button type="button" class="cancel-btn" onclick="toggleSettings()">Cancel</button>
+                </div>
+            </form>
+        </div>
         <div class="profile-card">
             <div class="profile-content">
                 <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" 
@@ -70,5 +89,11 @@
             </div>
             {% endfor %}
         </section>
+        <script>
+            function toggleSettings() {
+                const panel = document.getElementById('settingsPanel');
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            }
+        </script>
     </body>
 </html>

@@ -424,6 +424,40 @@ def profile():
                          user=user,
                          articles=articles)
 
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    user = User.query.get(session['user_id'])
+    try:
+        new_username = request.form.get('username')
+        if new_username and new_username != user.username:
+            existing_user = User.query.filter_by(username=new_username).first()
+            if existing_user and existing_user.id != user.id:
+                flash('Username already taken', 'danger')
+                return redirect(url_for('profile'))
+            user.username = new_username
+        if 'profile_pic' in request.files:
+            file = request.files['profile_pic']
+            if file.filename != '':
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    unique_filename = f"{secrets.token_hex(8)}_{filename}"
+                    file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+                    file.save(file_path)
+                    if user.profile_pic != 'default.jpg':
+                        old_file_path = os.path.join(app.config['UPLOAD_FOLDER'], user.profile_pic)
+                        if os.path.exists(old_file_path):
+                            os.remove(old_file_path)
+                    user.profile_pic = unique_filename
+        db.session.commit()
+        session['username'] = user.username
+        flash('Profile updated successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error updating profile: ' + str(e), 'danger')
+    return redirect(url_for('profile'))
+
 
 if __name__ == '__main__':
     with app.app_context():
