@@ -61,6 +61,9 @@ class ArticleForm(FlaskForm):
         ('entrepreneurship', 'Entrepreneurship'),
         ('other', 'Other')
     ], validators=[DataRequired()])
+    image = FileField('Article Image', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
+    ])
     submit = SubmitField('Publish')
 
 
@@ -166,26 +169,18 @@ def search_be():
     if request.method == 'POST':
         query = request.form.get('q', '')
         return redirect(url_for('search_be', q=query))
-    
     query = request.args.get('q', '')
     category = request.args.get('category', '')
-    
     base_query = Article.query
-    
-    # Only apply category filter if a specific category is selected
     if category and category.lower() != 'all':
         base_query = base_query.filter_by(category=category)
-    
     if query:
         base_query = base_query.filter(
             (Article.title.ilike(f'%{query}%')) | 
             (Article.content.ilike(f'%{query}%')) |
             (Article.category.ilike(f'%{query}%'))
         )
-    
-    # Get all articles (no pagination)
     articles = base_query.order_by(Article.id.desc()).all()
-    
     return render_template('search_page_before.html',
                          articles=articles,
                          query=query,
@@ -322,12 +317,22 @@ def create():
     form = ArticleForm()
     if form.validate_on_submit():
         try:
+            image_filename = 'default_article.jpg'
+            if form.image.data:
+                file = form.image.data
+                if file.filename != '':
+                    filename = secure_filename(file.filename)
+                    image_filename = f"{secrets.token_hex(8)}_{filename}"
+                    file_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+                    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+                    file.save(file_path)
             new_article = Article(
                 title=form.title.data,
                 content=form.content.data,
                 excerpt=form.excerpt.data or form.content.data[:300],
                 category=form.category.data,
-                author_id=session['user_id']
+                author_id=session['user_id'],
+                image_url=image_filename
             )
             db.session.add(new_article)
             db.session.commit()

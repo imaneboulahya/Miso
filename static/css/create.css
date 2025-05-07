@@ -279,3 +279,21 @@ button.share-btn::before {
       font-size: 12px;
     }
 }
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.form-group small {
+    display: block;
+    color: #666;
+    font-size: 0.8em;
+    margin-top: 5px;
+}

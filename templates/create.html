@@ -32,7 +32,7 @@
             </div>
         </nav>
         <div class="editor-container">
-            <form method="POST" action="{{ url_for('create') }}" id="article-form">
+            <form method="POST" action="{{ url_for('create') }}" id="article-form" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div id="toolbar">
                   <button type="button" onclick="execCmd('bold')">Gras</button>
@@ -76,7 +76,9 @@
                     Commencez à écrire votre article ici...
                 </div>
                 <div class="form-group">
-                    <textarea id="excerpt" name="excerpt" placeholder="Résumé court (optionnel)"></textarea>
+                    <label for="image">Article Image (optional)</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                    <small>Recommended size: 1200x630 pixels</small>
                 </div>
                 <div class="form-group">
                     <select id="category" name="category" required>
@@ -98,8 +100,5 @@
                 </div>
             </form>
         </div>
-        <script>
-            
-        </script>
     </body>
 </html>
