@@ -96,14 +96,15 @@
     </main>
     <!-- Comments Section -->
     <section class="comments-section">
-    <div class="container">
-        <h2>Comments</h2>
-        {% if 'user_id' in session %}
-        <form class="comment-form" method="POST" action="{{ url_for('add_comment', article_id=article.id) }}">
-            <textarea name="comment_text" placeholder="Share your thoughts..." required></textarea>
-            <button type="submit" class="btn-primary">Post Comment</button>
-        </form>
-        {% endif %}
+        <div class="container">
+            <h2>Comments</h2>
+            {% if 'user_id' in session %}
+            <form class="comment-form" method="POST" action="{{ url_for('add_comment', article_id=article.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <textarea name="comment_text" placeholder="Share your thoughts..." required></textarea>
+                <button type="submit" class="btn-primary">Post Comment</button>
+            </form>
+            {% endif %}
         <div class="comments-list">
             {% if article.comments %}
                 {% for comment in article.comments %}

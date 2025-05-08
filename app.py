@@ -415,7 +415,7 @@ def category_page(category_name):
         'entrepreneurship': {'color': '#252275', 'description': 'Startup journeys'},
         'other': {'color': '#91558e', 'description': 'Miscellaneous gems'}
     }
-    return render_template(f'categories/{category_name}.html',
+    return render_template('categories/{category_name}.html',
                          articles=articles,
                          category_name=category_name,
                          category_color=category_meta[category_name]['color'],

@@ -65,9 +65,9 @@
       {% for article in articles %}
       <div class="card">
         <div class="header">
-          <div class="image" style="background-image: url('{{ url_for('static', filename=article.image_url) }}')">
+          <div class="image" style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) }}')">
             <span class="tag">{{ article.category }}</span>
-          </div>
+        </div>
           <div class="date">
             <span>{{ article.date }}</span>
           </div>
@@ -76,14 +76,13 @@
           <a href="{{ url_for('article_be', id=article.id) }}" class="block">
             <span class="title">{{ article.title }}</span>
           </a>
-          <p class="description">{{ article.excerpt }}</p>
+          <p class="description">{{ article.excerpt | safe}}</p>
         </div>
       </div>
       {% endfor %}
     </div>
     <a href="{{ url_for('search_be') }}" class="view-all">View All Popular Articles →</a>
   </section>
-
   <footer class="site-footer">
     <div class="footer-content">
       <p>Thank you for visiting our website! We appreciate your time and support.</p>
