@@ -7,33 +7,28 @@ toggleButton.addEventListener('click', () => {
 function clearPlaceholder() {
   const editor = document.getElementById("editor");
   if (editor.innerText === "Commencez à écrire votre article ici...") {
-    editor.innerText = ""; // Clear the placeholder when focused
+    editor.innerText = "";
   }
 }
 
 function restorePlaceholderIfEmpty() {
   const editor = document.getElementById("editor");
   if (editor.innerText.trim() === "") {
-    editor.innerText = "Commencez à écrire votre article ici..."; // Restore if empty
+    editor.innerText = "Commencez à écrire votre article ici...";
   }
 }
 
 function updateStatus() {
   const editor = document.getElementById("editor");
   let text = editor.innerText;
-  
-  // Ignore counting if the text is still the placeholder
   if (text === "Commencez à écrire votre article ici...") {
     document.getElementById("word-count").innerText = "0 mot, 0 caractère";
     return;
   }
-
   const words = text.trim().split(/\s+/).filter(w => w.length > 0);
   const characters = text.replace(/\s/g, '');
-  
   document.getElementById("word-count").innerText =
     `${words.length} mot${words.length > 1 ? 's' : ''}, ${characters.length} caractère${characters.length > 1 ? 's' : ''}`;
-  
   document.getElementById("last-modified").innerText =
     "Dernière modification : " + new Date().toLocaleTimeString();
 }
@@ -52,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 3000);
 });
 function toggleLike(articleId) {
-  // Check if user is logged in
   fetch('/check_auth')
       .then(response => response.json())
       .then(data => {
@@ -60,8 +54,6 @@ function toggleLike(articleId) {
               window.location.href = '/login';
               return;
           }
-          
-          // Proceed with like/unlike
           fetch(`/article/${articleId}/like`, {
               method: 'POST',
               headers: {
@@ -73,13 +65,20 @@ function toggleLike(articleId) {
               const likeBtn = document.querySelector(`.like-btn[onclick="toggleLike(${articleId})"]`);
               const likeCount = likeBtn.querySelector('.like-count');
               const likeText = likeBtn.querySelector('.like-text');
-              
               likeCount.textContent = data.likes;
               likeText.textContent = data.liked ? 'Liked' : 'Like';
-              
-              // Visual feedback
               likeBtn.classList.toggle('liked', data.liked);
           })
           .catch(error => console.error('Error:', error));
       });
 }
+document.getElementById('article-form').addEventListener('submit', function(e) {
+  const editorContent = document.getElementById('editor').innerHTML;
+  document.getElementById('content').value = editorContent;
+});
+document.getElementById('article-form').addEventListener('submit', function(e) {
+  const editorContent = document.getElementById('editor').innerHTML;
+  const cleanContent = DOMPurify.sanitize(editorContent);
+  document.getElementById('content').value = cleanContent;
+});
+document.getElementById('editor').innerHTML = yourSavedHtmlContent;

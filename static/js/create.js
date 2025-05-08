@@ -140,3 +140,7 @@ function cleanEditorContent(html) {
   }); 
   return temp.innerHTML;
 }
+document.getElementById('article-form').addEventListener('submit', function(e) {
+  const editorContent = document.getElementById('editor').innerHTML;
+  document.getElementById('content').value = editorContent;
+});

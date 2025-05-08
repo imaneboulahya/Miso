@@ -1,6 +1,7 @@
 from flask_wtf.file import FileField, FileAllowed
 from werkzeug.utils import secure_filename
 from flask import jsonify
+from flask_wtf.csrf import CSRFProtect
 from flask import Flask, render_template, redirect, url_for, request, flash, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,6 +14,9 @@ import secrets
 
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
+app.config['WTF_CSRF_ENABLED'] = True
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///miso.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -137,6 +141,32 @@ def home():
     articles = Article.query.order_by(Article.id.desc()).limit(6).all()
     return render_template('index.html', categories=categories, articles=articles)
 
+@app.route('/delete_article/<int:article_id>', methods=['DELETE'])
+def delete_article(article_id):
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    try:
+        db.session.begin()
+        article = Article.query.get_or_404(article_id)
+        if article.author_id != session['user_id']:
+            return jsonify({'success': False, 'message': 'Not authorized'}), 403
+        Comment.query.filter_by(article_id=article.id).delete()
+        Like.query.filter_by(article_id=article.id).delete()
+        if article.image_url != 'default_article.jpg':
+            try:
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], article.image_url)
+                if os.path.exists(image_path):
+                    os.remove(image_path)
+            except OSError as e:
+                db.session.rollback()
+                return jsonify({'success': False, 'message': f'Error deleting image: {str(e)}'}), 500
+        db.session.delete(article)
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 @app.route('/categorybe/<category_name>')
 def category_be(category_name):
     valid_categories = ['art', 'culture', 'sport', 'economy', 
@@ -253,9 +283,7 @@ def search():
             (Article.content.ilike(f'%{query}%')) |
             (Article.category.ilike(f'%{query}%'))
         )
-    
     results = base_query.order_by(Article.id.desc()).paginate(page=page, per_page=9)
-    
     return render_template('search_page.html',
                          query=query,
                          results=results,
