@@ -319,3 +319,23 @@ section a{
     color: #000;
     font-weight: 600;
 }
+.navbar-links li a:hover:not(.sign) {
+    animation: colorShift 3s infinite;
+}
+@keyframes colorShift {
+    0% {
+      color: #FF9FEE;
+    }
+    25% {
+      color: #B3B0FF;
+    }
+    50% {
+      color: #FD0261;
+    }
+    75% {
+      color: #aae354;
+    }
+    100% {
+      color: #FF9FEE;
+    }
+}

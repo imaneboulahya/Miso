@@ -398,3 +398,121 @@ body {
         font-size: 13px;
     }
 }
+.card {
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+.search-input {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.search-input:focus {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.navbar-links li a:hover:not(.sign) {
+    animation: colorShift 3s infinite;
+}
+@keyframes colorShift {
+    0% {
+      color: #FF9FEE;
+    }
+    25% {
+      color: #B3B0FF;
+    }
+    50% {
+      color: #FD0261;
+    }
+    75% {
+      color: #aae354;
+    }
+    100% {
+      color: #FF9FEE;
+    }
+}
+.categories-list .active {
+    position: relative;
+    overflow: hidden;
+}
+.categories-list .active:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-100%);
+    animation: shine 1.5s infinite;
+}
+@keyframes shine {
+    100% {
+        transform: translateX(100%);
+    }
+}
+.image {
+    overflow: hidden;
+}
+.image {
+    transition: transform 0.5s ease;
+}
+.card:hover .image {
+    transform: scale(1.03);
+}
+.section-header h2 {
+    position: relative;
+    display: inline-block;
+}
+.section-header h2:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background: linear-gradient(90deg, #FF9FEE, #B3B0FF, #FD0261, #aae354);
+    background-size: 400% 400%;
+    animation: gradient 3s ease infinite;
+}
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.no-results {
+    animation: bounceIn 0.8s ease;
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+}
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@media (max-width: 768px) {
+    .section-header h2:after {
+        bottom: -3px;
+        height: 1.5px;
+    }
+    
+    .navbar-links li a:not(.sign):after {
+        bottom: 5px;
+    }
+}
