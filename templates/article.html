@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Miso - {{ article.title }}</title>
     <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/article.css') }}">
@@ -49,7 +50,7 @@
                     <div class="meta">
                         <span>By {{ article.author.username }}</span>
                         <span>{{ article.date }}</span>
-                        <button class="like-btn" onclick="toggleLike({{ article.id }})">
+                        <button class="like-btn" data-article-id="{{ article.id }}">
                             <span class="like-count">{{ article.likes|length }}</span>
                             <span class="like-text">{% if liked %}Liked{% else %}Like{% endif %}</span>
                         </button>

@@ -48,29 +48,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 function toggleLike(articleId) {
   fetch('/check_auth')
+    .then(response => response.json())
+    .then(data => {
+      if (!data.authenticated) {
+        window.location.href = '/login';
+        return;
+      }
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+      fetch(`/article/${articleId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
+        },
+      })
       .then(response => response.json())
       .then(data => {
-          if (!data.authenticated) {
-              window.location.href = '/login';
-              return;
-          }
-          fetch(`/article/${articleId}/like`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          })
-          .then(response => response.json())
-          .then(data => {
-              const likeBtn = document.querySelector(`.like-btn[onclick="toggleLike(${articleId})"]`);
-              const likeCount = likeBtn.querySelector('.like-count');
-              const likeText = likeBtn.querySelector('.like-text');
-              likeCount.textContent = data.likes;
-              likeText.textContent = data.liked ? 'Liked' : 'Like';
-              likeBtn.classList.toggle('liked', data.liked);
-          })
-          .catch(error => console.error('Error:', error));
-      });
+        const likeBtn = document.querySelector(`.like-btn[onclick="toggleLike(${articleId})"]`);
+        const likeCount = likeBtn.querySelector('.like-count');
+        const likeText = likeBtn.querySelector('.like-text');
+        likeCount.textContent = data.likes;
+        likeText.textContent = data.liked ? 'Liked' : 'Like';
+        likeBtn.classList.toggle('liked', data.liked);
+      })
+      .catch(error => console.error('Error:', error));
+    });
 }
 document.getElementById('article-form').addEventListener('submit', function(e) {
   const editorContent = document.getElementById('editor').innerHTML;
