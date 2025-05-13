@@ -80,7 +80,7 @@
                         <a href="{{ url_for('article_be', id=article.id) }}" class="block">
                             <span class="title">{{ article.title }}</span>
                         </a>
-                        <p class="description">{{ article.excerpt }}</p>
+                        <p class="description">{{ article.excerpt |safe }}</p>
                     </div>
                 </div>
                 {% else %}
