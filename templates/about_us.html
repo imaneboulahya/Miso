@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Miso</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/about_us.css') }}">
+</head>
+<body>
+  <button class="back-button" onclick="goBack()">←</button>
+  <section class="about-section">
+    <div class="about-header">
+      <h1>About Miso</h1>
+      <p class="tagline">A community-driven platform for writers and readers to connect through articles.</p>
+    </div>
+    <div class="mission">
+      <p>
+        Whether you're passionate about sharing your thoughts or discovering new perspectives, 
+        Miso provides a welcoming space for meaningful expression.
+      </p>
+    </div>
+    <div class="why-miso">
+      <h2>Why Miso?</h2>
+      <p>
+        Many writers struggle to find platforms that:
+      </p>
+      <ul>
+        <li>Focus on long-form content (not just social media snippets)</li>
+        <li>Offer genuine engagement (not just algorithms)</li>
+        <li>Allow authentic self-expression without restrictions</li>
+      </ul>
+    </div>
+    <div class="features">
+      <h2>Features</h2>
+      <div class="feature-columns">
+        <div class="feature-card">
+          <h3>For Writers</h3>
+          <ul>
+            <li>Easy Publishing: Write and format articles effortlessly</li>
+            <li>Categories: Tag your work by topic</li>
+            <li>Reader Feedback: Get meaningful engagement</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h3>For Readers</h3>
+          <ul>
+            <li>Free Signup – Join in seconds</li>
+            <li>Smart Search – Find articles easily</li>
+            <li>Read Unlimited – No paywalls</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="team">
+      <h2>The Team</h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <h3>Rochdi Ouissal</h3>
+          <p class="role">Backend Developer</p>
+          <p>Built the server infrastructure and APIs</p>
+          <div class="social-links">
+            <a href="https://github.com/Ouissou48" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/ouissal-rochdi-04991333a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="team-member">
+          <h3>Rochdi Ouiam</h3>
+          <p class="role">Frontend Developer</p>
+          <p>Designed the UI/UX and client-side</p>
+          <div class="social-links">
+            <a href="https://github.com/rochdiouiam" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/ouiam-rochdi-53160233a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="team-member">
+          <h3>Boulahya Imane</h3>
+          <p class="role">Full-Stack Developer</p>
+          <p>Integrated features and optimized performance</p>
+          <div class="social-links">
+            <a href="https://github.com/imaneboulahya" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/imane-boulahya-674973323?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "{{ url_for('home') }}";
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('.mission, .why-miso, .features, .team');
+      sections.forEach((section, index) => {
+        section.style.animationDelay = `${0.3 + (index * 0.1)}s`;
+      });
+    });
+  </script>
+</body>
+</html>

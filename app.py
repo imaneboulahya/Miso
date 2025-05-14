@@ -228,6 +228,10 @@ def article_be(id):
 def check_auth():
     return jsonify({'authenticated': 'user_id' in session})
 
+@app.route('/about-us')
+def about_us():
+    return render_template('about_us.html')
+
 @app.route('/article/<int:id>')
 def article_view(id):
     if 'user_id' not in session:
