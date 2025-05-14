@@ -1,8 +1,10 @@
+# <div align="center"><img src="static/images/logo.png" alt="Miso Logo" width="200"/></div>
+
 # 📚 Miso
 
 A community-driven platform for writers and readers to connect through articles. ✍️📖
 
-Whether you're passionate about sharing your thoughts or discovering new perspectives, Miso provides a welcoming space for meaningful expression. 🌈
+Whether you're passionate about sharing your thoughts or discovering new perspectives, Miso provides a welcoming space for meaningful expression. 
 
 ## ❓ Why Miso?
 
