@@ -456,9 +456,14 @@ def profile():
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
     articles = Article.query.filter_by(author_id=user.id).order_by(Article.id.desc()).all()
+    likes_count = db.session.query(db.func.count(Like.id))\
+                           .join(Article, Like.article_id == Article.id)\
+                           .filter(Article.author_id == user.id)\
+                           .scalar() or 0
     return render_template('profile.html', 
                          user=user,
-                         articles=articles)
+                         articles=articles,
+                         likes_count=likes_count)
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():

@@ -189,7 +189,7 @@
                         <a href="{{ url_for('article_view', id=article.id) }}" class="block">
                             <span class="title">{{ article.title }}</span>
                         </a>
-                        <p class="description">{{ article.excerpt or article.content[:100] }}...</p>
+                        <p class="description">{{ article.excerpt | safe}}</p>
                     </div>
                 </div>
                 {% endfor %}
