@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miso User Guide</title>
+    <style>
+        
+      :root {
+        --pink: #ec008c;
+        --blue: #00b4db;
+        --accent: #ff7e5f;
+        --text: #2d3748;
+        --light: #f8fafc;
+        --dark: #1a202c;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text);
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        margin: 0;
+        padding: 0;
+      }
+      
+      .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: linear-gradient(to right, var(--pink), var(--blue));
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .back-button:hover {
+      transform: translateX(-3px) scale(1.1);
+    }
+      
+      .guide-container {
+        max-width: 900px;
+        margin: 80px auto 40px;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        animation: fadeIn 0.6s ease-out;
+      }
+      
+      .guide-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+      }
+      
+      .guide-header h1 {
+        font-size: 2.5rem;
+        margin: 0;
+        background: linear-gradient(to right, var(--pink), var(--blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .tagline {
+        font-size: 1.2rem;
+        color: var(--dark);
+      }
+      
+      .guide-section {
+        margin-bottom: 40px;
+        opacity: 0;
+        animation: fadeIn 0.6s ease-out forwards;
+        animation-delay: 0.3s;
+      }
+      
+      h2 {
+        color: var(--text);
+        position: relative;
+        padding-bottom: 10px;
+      }
+      
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(to right, var(--pink), var(--blue));
+      }
+      
+      .feature-card {
+        background: var(--light);
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+      
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        border-left-color: var(--pink);
+      }
+      
+      .step {
+        display: flex;
+        margin-bottom: 1.5rem;
+        align-items: flex-start;
+      }
+      
+      .step-number {
+        background: linear-gradient(to right, var(--pink), var(--blue));
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+        font-weight: bold;
+      }
+      
+      .button-example {
+        display: inline-block;
+        background: linear-gradient(to right, var(--pink), var(--blue));
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
+        margin: 0.3rem 0;
+        font-weight: 500;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+      
+      .button-example:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+      }
+      
+      .screenshot-container {
+        max-width: 100%;
+        margin: 1.5rem auto;
+        text-align: center;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      }
+      
+      .responsive-screenshot {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      
+      .caption {
+        font-size: 0.9rem;
+        color: var(--dark);
+        margin-top: 0.5rem;
+        font-style: italic;
+      }
+      
+      .tip-box {
+        background: rgba(0, 180, 219, 0.08);
+        padding: 1.2rem;
+        border-left: 4px solid var(--blue);
+        margin: 1.5rem 0;
+        border-radius: 0 6px 6px 0;
+        position: relative;
+      }
+      
+      .tip-box::before {
+        content: 'TIP';
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--blue);
+        color: white;
+        padding: 0.2rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      
+      .warning-box {
+        background: rgba(236, 0, 140, 0.08);
+        padding: 1.2rem;
+        border-left: 4px solid var(--pink);
+        margin: 1.5rem 0;
+        border-radius: 0 6px 6px 0;
+        position: relative;
+      }
+      
+      .warning-box::before {
+        content: 'NOTE';
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--pink);
+        color: white;
+        padding: 0.2rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      
+      @media (max-width: 768px) {
+        .guide-container {
+          margin: 60px 15px 30px;
+          padding: 20px;
+        }
+        
+        .guide-header h1 {
+          font-size: 2rem;
+        }
+        
+        .feature-card {
+          padding: 20px;
+        }
+      }
+    
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.history.back()">←</button>
+    <div class="guide-container">
+        <h1>Miso User Guide</h1>
+        <section class="guide-section">
+            <h2>Getting Started with Miso</h2>
+            <div class="feature-card">
+                <h3>Creating Your Account</h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p>Click the <span class="button-example">Sign Up</span> button in the top right corner</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p>Fill in your details:</p>
+                        <ul>
+                            <li>Choose a username</li>
+                            <li>Enter your email address</li>
+                            <li>Create a secure password</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step">
+                </div>
+            </div>
+            <div class="feature-card">
+                <h3>Logging In</h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p>Click <span class="button-example">Log In</span> in the top navigation</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p>Enter your email and password</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <p>Click <span class="button-example">Log In</span> to access your account</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="guide-section">
+            <h2>Reading Articles</h2>
+            <div class="feature-card">
+                <h3>Discovering Content</h3>
+                <p>Explore articles in several ways:</p>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p><strong>Homepage:</strong> Browse featured and popular articles</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p><strong>Categories:</strong> Click on any category to see related articles</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <p><strong>Search:</strong> Use the search bar to find specific topics</p>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <h3>Article Features</h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p><strong>Liking Articles:</strong> Click the <span class="button-example">Like</span> button to show appreciation</p>
+                        <div class="tip-box">
+                            <strong>Note:</strong> You need to be logged in to like articles.
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p><strong>Comments:</strong> Scroll to the bottom to read and post comments</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <p><strong>Sharing:</strong> Use your browser's share options to share articles</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="guide-section">
+            <h2>Writing and Publishing Articles</h2>
+            <div class="feature-card">
+                <h3>Creating a New Article</h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p>Click <span class="button-example">Create</span> in the navigation (must be logged in)</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p>Enter your article details:</p>
+                        <ul>
+                            <li><strong>Title:</strong> Catchy headline for your article</li>
+                            <li><strong>Content:</strong> Write your article using the editor tools</li>
+                            <li><strong>Image:</strong> Upload a cover image (optional)</li>
+                            <li><strong>Category:</strong> Select the most relevant category</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <p>Use the formatting toolbar to style your text:</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <p>Click <span class="button-example">Publish</span> when ready</p>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <h3>Delete An Article</h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p>Go to your <span class="button-example">Profile</span> page</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p>Find the article you want to edit</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <p>Click the <span class="button-example">⋯</span> menu and select "Edit"</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <p>Make your changes and click <span class="button-example">Update</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="guide-section">
+            <h2>Managing Your Profile</h2>
+            <div class="feature-card">
+                <h3>Updating Account Information</h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p>Click the <span class="button-example">⚙️</span> settings button in your profile</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p>Change your username or profile picture</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <p>Click <span class="button-example">Save Changes</span> to update</p>
+                    </div>
+                </div>
+            </div>            
+            <div class="feature-card">
+                <h3>Viewing Your Stats</h3>
+                <p>Your profile displays:</p>
+                <ul>
+                    <li>Total articles published</li>
+                    <li>Total likes received</li>
+                    <li>All your published articles</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="guide-section">
+            <h2>Advanced Features</h2>
+            
+            <div class="feature-card">
+                <h3>Search Tips</h3>
+                <p>Find exactly what you're looking for:</p>
+                <ul>
+                    <li>Use quotes for exact matches: <code>"climate change"</code></li>
+                    <li>Filter by category using the category tabs</li>
+                    <li>Sort results by date or popularity</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Following Authors</h3>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <p>Click on an author's name in any article</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <p>Click the <span class="button-example">Follow</span> button on their profile</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <p>See their new articles in your feed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="guide-section">
+            <h2>Troubleshooting</h2>
+            <div class="feature-card">
+                <h3>Common Issues</h3>
+                <p><strong>Can't log in?</strong></p>
+                <ul>
+                    <li>Check your email</li>
+                    <li>Check your password</li>
+                </ul>
+                <p><strong>Article not publishing?</strong></p>
+                <ul>
+                    <li>Check that you are in the right category</li>
+                    <li>Ensure your title is correct</li>
+                    <li>Try refreshing the page</li>
+                </ul>
+                <p><strong>Feature not working?</strong></p>
+                <ul>
+                    <li>Make sure you're logged in</li>
+                    <li>Try a different browser</li>
+                    <li>Check for browser updates</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>Need More Help?</h3>
+                <p>Visit our <span class="button-example">About Us</span> page to contact support or learn more about Miso.</p>
+            </div>
+        </section>
+    </div>
+    <script>
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "{{ url_for('home') }}";
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('.mission, .why-miso, .features, .team');
+      sections.forEach((section, index) => {
+        section.style.animationDelay = `${0.3 + (index * 0.1)}s`;
+      });
+    });
+  </script>
+</body>
+</html>

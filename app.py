@@ -232,6 +232,10 @@ def check_auth():
 def about_us():
     return render_template('about_us.html')
 
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
 @app.route('/article/<int:id>')
 def article_view(id):
     if 'user_id' not in session:
