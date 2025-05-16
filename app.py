@@ -17,7 +17,6 @@ app = Flask(__name__)
 csrf = CSRFProtect(app)
 app.config['WTF_CSRF_ENABLED'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///miso.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -116,13 +115,15 @@ def get_suggested_articles(article, limit=3):
         Article.category == article.category,
         Article.id != article.id
     ).order_by(db.func.random()).limit(2).all()
-    
     random_article = Article.query.filter(
         Article.id != article.id,
         ~Article.id.in_([a.id for a in same_category])
     ).order_by(db.func.random()).first()
-    
     return same_category + ([random_article] if random_article else [])
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 @app.route('/')
 def home():
