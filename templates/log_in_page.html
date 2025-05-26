@@ -1,63 +1,129 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/log_in_page.css') }}">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-        <title>Miso | Log in</title>
-    </head>
-    <body>
-        <div id="threejs-container"></div>
-        <div class="wavy-circle-first wavy-circle"></div>
-        <div class="wavy-circle-second wavy-circle"></div>
-        <div class="wavy-circle-third wavy-circle"></div>        
-        <nav class="navbar">
-          <a href="{{ url_for('home') }}" class="mi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miso | Log in</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/log_in_page.css') }}">
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/mobile_menu_toggle.js') }}" defer></script>
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="navbar">
+        <a href="{{ url_for('home') }}" class="mi">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
-          </a>
-          <a href="#" class="toggle-button">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-          </a>
-            <div class="navbar-links">
-                <ul>
-                    <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('search') }}">Search</a></li>
-                    <li><a href="{{ url_for('login') }}">Log in</a></li>
-                    <li><a href="{{ url_for('signup') }}" class="sign">Sign up</a></li>
-                </ul>
+        </a>
+        
+        <button class="toggle-button" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        
+        <nav class="navbar-links">
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                <li><a href="{{ url_for('login') }}">Log in</a></li>
+                <li><a class="sign" href="{{ url_for('signup') }}">Sign up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="login-container">
+        <div class="card-wrapper">
+            <!-- Welcome Card (Left) -->
+            <div class="welcome-card">
+                <div class="welcome-content">
+                    <h2>Welcome Back!</h2>
+                    <p>We're so excited to see you again! Log in to access your personalized dashboard and continue your writing and reading journey.</p>
+                    
+                    <ul class="benefits-list">
+                        <li>Access your saved preferences and history</li>
+                        <li>Connect with other community members</li>
+                        <li>Get article recommendations tailored to your interests</li>
+                        <li>Enjoy a seamless experience across all your devices</li>
+                    </ul>
+                    
+                    <p>Having trouble logging in? <a href="#" style="color: white; text-decoration: underline;">Reset your password</a>.</p>
+                </div>
             </div>
-        </nav> 
-        <div class="login-container">
-            <div class="login-box">
+            
+            <!-- Form Card (Right) -->
+            <div class="form-card">
                 <div class="login-header">
                     <header>Log in</header>
-                </div> 
+                </div>
+                
                 <form method="POST" action="{{ url_for('login') }}">
-                    {{ form.hidden_tag() }}
                     <div class="input-box">
                         {{ form.email(class="input-field", placeholder="Email", autocomplete="off") }}
                         {% for error in form.email.errors %}
                             <span class="error-message">{{ error }}</span>
                         {% endfor %}
                     </div>
+                    
                     <div class="input-box">
                         {{ form.password(class="input-field", placeholder="Password", autocomplete="off") }}
                         {% for error in form.password.errors %}
                             <span class="error-message">{{ error }}</span>
                         {% endfor %}
                     </div>
+                    
                     <div class="input-submit">
                         <button type="submit" class="submit-btn">Log in</button>
                     </div>
                 </form>
+                
                 <div class="sign-up-link">
                     <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
                 </div>
             </div>
         </div>
-      <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-    </body>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Miso</h3>
+                <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                    <li><a href="{{ url_for('help') }}">Help</a></li>
+                    <li><a href="{{ url_for('about_us') }}">About us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="{{ url_for('category_be', category_name='technology') }}">Technology</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='health') }}">Health</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='art') }}">Art</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='culture') }}">Culture</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='sport') }}">Sport</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='economy') }}">Economy</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='entrepreneurship') }}">Entrepreneurship</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
 </html>

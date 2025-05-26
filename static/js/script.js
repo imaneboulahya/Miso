@@ -84,3 +84,34 @@ document.getElementById('article-form').addEventListener('submit', function(e) {
   document.getElementById('content').value = cleanContent;
 });
 document.getElementById('editor').innerHTML = yourSavedHtmlContent;
+
+
+document.querySelectorAll('.reply-form form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const discussionId = form.getAttribute('action').split('/').pop();
+        
+        try {
+            const response = await fetch(`/discussion/${discussionId}/reply`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                location.reload(); // Refresh to show new reply
+            } else {
+                alert(data.message || 'Error posting reply');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while posting your reply');
+        }
+    });
+});

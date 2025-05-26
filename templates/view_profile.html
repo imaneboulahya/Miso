@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search_page.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Miso | {{ user.username }}</title>
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="navbar">
+        <a href="{{ url_for('home_after_login') }}" class="mi">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
+        </a>
+        
+        <button class="toggle-button" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        
+        <nav class="navbar-links">
+            <ul>
+                <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                <li><a href="{{ url_for('search') }}">Search</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('create') }}">Create</a></li>
+                <li><a href="{{ url_for('logout') }}">Log out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) if user.profile_pic != 'default.jpg' else url_for('static', filename='images/default.jpg') }}" alt="{{ user.username }}">
+            </div>
+            <div class="profile-info">
+                <h1>{{ user.username }}</h1>
+                <p class="profile-email">{{ user.email }}</p>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span class="stat-number">{{ articles|length }}</span>
+                        <span class="stat-label">Articles</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">{{ likes_count }}</span>
+                        <span class="stat-label">Likes</span>
+                    </div>
+                </div>
+            </div>
+            {% if current_user_id == user.id %}
+            <div class="profile-actions">
+                <a href="{{ url_for('profile') }}" class="edit-profile-btn">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- User Articles -->
+        <div class="profile-articles">
+            <h2>Articles by {{ user.username }}</h2>
+            
+            {% if articles %}
+            <div class="articles-grid">
+                {% for article in articles %}
+                <div class="article-card">
+                    <a href="{{ url_for('article_view', id=article.id) }}">
+                        <div class="article-image" 
+                             style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) if article.image_url != 'default_article.jpg' else url_for('static', filename='images/default_article.jpg') }}')">
+                        </div>
+                        <div class="article-info">
+                            <h3>{{ article.title }}</h3>
+                            <p class="article-excerpt">{{ article.excerpt or article.content[:150] + '...' }}</p>
+                            <div class="article-meta">
+                                <span class="article-category" style="background-color: {{ category_colors.get(article.category, '#91558e') }};">
+                                    {{ article.category|capitalize }}
+                                </span>
+                                <span>{{ article.date }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-articles">
+                <p>{{ user.username }} hasn't published any articles yet.</p>
+                {% if current_user_id == user.id %}
+                <a href="{{ url_for('create') }}" class="create-article-btn">
+                    <i class="fas fa-plus"></i> Create Your First Article
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Miso</h3>
+                <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                    <li><a href="{{ url_for('help') }}">Help</a></li>
+                    <li><a href="{{ url_for('about_us') }}">About us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="{{ url_for('category_be', category_name='technology') }}">Technology</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='health') }}">Health</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='art') }}">Art</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='culture') }}">Culture</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='sport') }}">Sport</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='economy') }}">Economy</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='entrepreneurship') }}">Entrepreneurship</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

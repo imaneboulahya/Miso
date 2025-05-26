@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Miso | {{ discussion.title }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search_page.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <style>
+        :root {
+            --primary-color: #FF4D8D;
+            --secondary-color: #FF85A2;
+            --dark-color: #333;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --message-border-radius: 18px;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f7;
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .discussion-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .discussion-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .discussion-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            margin-right: 20px;
+            border: 3px solid var(--white);
+            box-shadow: var(--shadow);
+        }
+        
+        .discussion-title {
+            font-size: 24px;
+            margin: 0;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .discussion-description {
+            color: var(--gray-color);
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .messages-container {
+            margin-top: 30px;
+            padding-top: 20px;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            max-width: 90%;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            margin-right: 15px;
+            background-size: cover;
+            border: 2px solid var(--white);
+            box-shadow: var(--shadow);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .message-author {
+            font-weight: 600;
+            margin-right: 10px;
+            font-size: 14px;
+            color: var(--dark-color);
+        }
+        
+        .message-time {
+            color: var(--gray-color);
+            font-size: 12px;
+        }
+        
+        .message-text {
+            background-color: var(--light-gray);
+            padding: 12px 16px;
+            border-radius: 0 var(--message-border-radius) var(--message-border-radius) var(--message-border-radius);
+            display: inline-block;
+            max-width: 100%;
+            word-wrap: break-word;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .your-message {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+        
+        .your-message .message-avatar {
+            margin-right: 0;
+            margin-left: 15px;
+        }
+        
+        .your-message .message-text {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: var(--message-border-radius) 0 var(--message-border-radius) var(--message-border-radius);
+        }
+        
+        .your-message .message-header {
+            justify-content: flex-end;
+        }
+        
+        .message-form {
+            margin-top: 30px;
+            display: flex;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid var(--light-gray);
+            border-radius: 30px;
+            margin-right: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 77, 141, 0.2);
+        }
+        
+        .send-button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .send-button:hover {
+            background-color: #ff3d7f;
+            transform: translateY(-1px);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .discussion-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .discussion-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .discussion-image {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .message {
+                max-width: 100%;
+            }
+            
+            .message-form {
+                flex-direction: column;
+            }
+            
+            .message-input {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .discussion-title {
+                font-size: 20px;
+            }
+            
+            .message-text {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+            
+            .send-button {
+                padding: 10px 20px;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message {
+            animation: fadeIn 0.3s ease forwards;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--light-gray);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        /* Header adjustments to match the theme */
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-text {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .navbar-links a {
+            color: var(--dark-color);
+            transition: color 0.3s ease;
+        }
+        
+        .navbar-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .toggle-button .bar {
+            background-color: var(--dark-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar">
+        <a href="{{ url_for('home_after_login') }}" class="mi">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
+        </a>
+        <button class="toggle-button" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <nav class="navbar-links">
+            <ul>
+                <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                <li><a href="{{ url_for('search') }}">Search</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('create') }}">Create</a></li>
+                <li><a href="{{ url_for('logout') }}">Log out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="discussion-container">
+            <div class="discussion-header">
+                <div class="discussion-image" 
+                     style="background-image: url('{{ url_for('static', filename='uploads/' + discussion.profile_pic) if discussion.profile_pic != 'default_discussion.jpg' else url_for('static', filename='images/default_discussion.jpg') }}')">
+                </div>
+                <div>
+                    <h1 class="discussion-title">{{ discussion.title }}</h1>
+                    <p class="discussion-description">{{ discussion.description }}</p>
+                </div>
+            </div>
+            
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="message {% if message.author_id == current_user_id %}your-message{% endif %}">
+                    <div class="message-avatar" 
+                         style="background-image: url('{{ url_for('static', filename='uploads/' + message.author.profile_pic) if message.author.profile_pic != 'default.jpg' else url_for('static', filename='images/default.jpg') }}')">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">{{ message.author.username }}</span>
+                            <span class="message-time">{{ message.timestamp.strftime('%b %d, %H:%M') }}</span>
+                        </div>
+                        <p class="message-text">{{ message.text }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <form method="POST" class="message-form">
+                <input type="text" name="message_text" class="message-input" placeholder="Type your message..." required>
+                <button type="submit" class="send-button">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Miso</h3>
+                <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                    <li><a href="{{ url_for('help') }}">Help</a></li>
+                    <li><a href="{{ url_for('about_us') }}">About us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="{{ url_for('category_be', category_name='technology') }}">Technology</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='health') }}">Health</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='art') }}">Art</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='culture') }}">Culture</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='sport') }}">Sport</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='economy') }}">Economy</a></li>
+                    <li><a href="{{ url_for('category_be', category_name='entrepreneurship') }}">Entrepreneurship</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

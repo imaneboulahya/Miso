@@ -9,19 +9,17 @@
       <title>Miso | Create</title>
     </head>
     <body>
-        <div class="wavy-circle-first wavy-circle"></div>
-        <div class="wavy-circle-second wavy-circle"></div>
-        <div class="wavy-circle-third wavy-circle"></div>
-        <nav class="navbar">
-            <a href="{{ url_for('home') }}" class="mi">
+        <!-- Header -->
+        <header class="navbar">
+            <a href="{{ url_for('home_after_login') }}" class="mi">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
             </a>
-            <a href="#" class="toggle-button">
+            <button class="toggle-button" aria-label="Toggle navigation">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
-            </a>
-            <div class="navbar-links">
+            </button>
+            <nav class="navbar-links">
                 <ul>
                     <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
                     <li><a href="{{ url_for('search') }}">Search</a></li>
@@ -29,42 +27,42 @@
                     <li><a href="{{ url_for('create') }}">Create</a></li>
                     <li><a href="{{ url_for('logout') }}">Log out</a></li>
                 </ul>
-            </div>
-        </nav>
+            </nav>
+        </header>
+
         <div class="editor-container">
             <form method="POST" action="{{ url_for('create') }}" id="article-form" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div id="toolbar">
-                  <button type="button" onclick="execCmd('bold')">Gras</button>
-                  <button type="button" onclick="execCmd('italic')">Italique</button>
-                  <button type="button" onclick="execCmd('underline')">Souligné</button>
-                  <button type="button" onclick="execCmd('strikeThrough')">Barré</button>
-                  <button type="button" onclick="execCmd('insertUnorderedList')">Puces</button>
-                  <button type="button" onclick="execCmd('insertOrderedList')">Numéros</button>
-                  <button type="button" onclick="insertLink()">Lien</button>
-                  <button type="button" onclick="insertImage()">Image</button>
-                  <button type="button" onclick="execCmd('removeFormat')">Effacer</button>
-                  <button type="button" onclick="toggleDarkMode()">Mode sombre</button>
-                  <select onchange="execCmdWithArg('fontName', this.value)">
-                     <option value="Arial">Arial</option>
-                     <option value="Georgia">Georgia</option>
-                     <option value="Courier New">Courier</option>
-                     <option value="Times New Roman">Times New Roman</option>
-                     <option value="Verdana">Verdana</option>
-                     <option value="Tahoma">Tahoma</option>
-                     <option value="Comic Sans MS">Comic Sans MS</option>
-                     <option value="Trebuchet MS">Trebuchet MS</option>
-                     <option value="Impact">Impact</option>
-                  </select>
-                  <select onchange="execCmdWithArg('fontSize', this.value)">
-                    <option value="2">Petit</option>
-                    <option value="4" selected>Moyen</option>
-                    <option value="6">Grand</option>
-                  </select>
-                  <input type="color" onchange="execCmdWithArg('foreColor', this.value)" title="Couleur du texte">
-                  <input type="color" onchange="execCmdWithArg('backColor', this.value)" title="Fond du texte">
+                    <button type="button" onclick="execCmd('bold')">Bold</button>
+                    <button type="button" onclick="execCmd('italic')">Italic</button>
+                    <button type="button" onclick="execCmd('underline')">Underline</button>
+                    <button type="button" onclick="execCmd('strikeThrough')">Strikethrough</button>
+                    <button type="button" onclick="execCmd('insertUnorderedList')">Bullets</button>
+                    <button type="button" onclick="execCmd('insertOrderedList')">Numbers</button>
+                    <button type="button" onclick="insertLink()">Link</button>
+                    <button type="button" onclick="insertImage()">Image</button>
+                    <button type="button" onclick="execCmd('removeFormat')">Clear</button>
+                    <select onchange="execCmdWithArg('fontName', this.value)">
+                        <option value="Arial">Arial</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Courier New">Courier</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Tahoma">Tahoma</option>
+                        <option value="Comic Sans MS">Comic Sans MS</option>
+                        <option value="Trebuchet MS">Trebuchet MS</option>
+                        <option value="Impact">Impact</option>
+                    </select>
+                    <select onchange="execCmdWithArg('fontSize', this.value)">
+                        <option value="2">Small</option>
+                        <option value="4" selected>Medium</option>
+                        <option value="6">Large</option>
+                    </select>
+                    <input type="color" onchange="execCmdWithArg('foreColor', this.value)" title="Text Color">
+                    <input type="color" onchange="execCmdWithArg('backColor', this.value)" title="Background Color">
                 </div>
-                <input type="text" id="title" name="title" placeholder="Titre du document" required>
+                <input type="text" id="title" name="title" placeholder="Document Title" required>
                 <textarea id="content" name="content" style="display:none;"></textarea>
                 <div 
                     id="editor" 
@@ -73,7 +71,7 @@
                     onfocus="clearPlaceholder()"
                     onblur="restorePlaceholderIfEmpty()"
                 >
-                    Commencez à écrire votre article ici...
+                    Start writing your article here...
                 </div>
                 <div class="form-group">
                     <label for="image">Article Image (optional)</label>
@@ -82,23 +80,57 @@
                 </div>
                 <div class="form-group">
                     <select id="category" name="category" required>
-                        <option value="">-- Choisir une catégorie --</option>
+                        <option value="">-- Select a category --</option>
                         <option value="art">Art</option>
                         <option value="culture">Culture</option>
                         <option value="sport">Sport</option>
-                        <option value="economy">Économie</option>
-                        <option value="technology">Technologie</option>
-                        <option value="health">Santé</option>
-                        <option value="entrepreneurship">Entrepreneuriat</option>
-                        <option value="other">Autre</option>
+                        <option value="economy">Economy</option>
+                        <option value="technology">Technology</option>
+                        <option value="health">Health</option>
+                        <option value="entrepreneurship">Entrepreneurship</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
                 <div id="status-bar">
-                  <div id="word-count">0 mots, 0 caractères</div>
-                  <div id="last-modified">Dernière modification : -</div>
-                  <button type="submit" class="share-btn">Publier</button>
+                    <div id="word-count">0 words, 0 characters</div>
+                    <div id="last-modified">Last modified: -</div>
+                    <button type="submit" class="share-btn">Publish</button>
                 </div>
             </form>
         </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Miso</h3>
+                    <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                        <li><a href="{{ url_for('search') }}">Search</a></li>
+                        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                        <li><a href="{{ url_for('create') }}">Create</a></li>
+                        <li><a href="{{ url_for('help') }}">Help</a></li>
+                        <li><a href="{{ url_for('about_us') }}">About us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="{{ url_for('category_page', category_name='technology') }}">Technology</a></li>
+                        <li><a href="{{ url_for('category_page', category_name='health') }}">Health</a></li>
+                        <li><a href="{{ url_for('category_page', category_name='art') }}">Art</a></li>
+                        <li><a href="{{ url_for('category_page', category_name='culture') }}">Culture</a></li>
+                        <li><a href="{{ url_for('category_page', category_name='sport') }}">Sport</a></li>
+                        <li><a href="{{ url_for('category_page', category_name='economy') }}">Economy</a></li>
+                        <li><a href="{{ url_for('category_page', category_name='entrepreneurship') }}">Entrepreneurship</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     </body>
 </html>

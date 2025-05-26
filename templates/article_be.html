@@ -121,6 +121,38 @@
             </div>
         </div>
     </section>
+    <!-- Footer -->
+  <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Miso</h3>
+                    <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                        <li><a href="{{ url_for('help') }}">Help</a></li>
+                        <li><a href="{{ url_for('about_us') }}">About us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="{{ url_for('category_be', category_name='technology') }}">Technology</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='health') }}">Health</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='art') }}">Art</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='culture') }}">Culture</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='sport') }}">Sport</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='economy') }}">Economy</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='entrepreneurship') }}">Entrepreneurship</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

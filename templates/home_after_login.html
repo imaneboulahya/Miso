@@ -1,98 +1,194 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-        <title>Miso</title>
-    </head>
-    <body>
-        <div class="wavy-circle-first wavy-circle"></div>
-        <div class="wavy-circle-second wavy-circle"></div>
-        <div class="wavy-circle-third wavy-circle"></div>
-        <nav class="navbar">
-          <a href="{{ url_for('home_after_login') }}" class="mi">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
-          </a>
-            <a href="#" class="toggle-button">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </a>
-            <div class="navbar-links">
-                <ul>
-                    <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
-                    <li><a href="{{ url_for('search') }}">Search</a></li>
-                    <li><a href="{{ url_for('profile') }}">Profile</a></li>
-                    <li><a href="{{ url_for('create') }}">Create</a></li>
-                    <li><a href="{{ url_for('logout') }}">Log out</a></li>
-                </ul>
-            </div>
-        </nav>
-        <section class="main">
-            <div class="main-content">
-                <h1>Share your voice. <br>Discover new perspectives</h1>
-                <p class="slogan">Miso is where ideas meet readers. Write, read, and connect.</p>
-            </div>
-        </section>
-        <div style="display: flex; justify-content: center;" class="hc">
-          <a class="join-button" href="{{ url_for('create') }}">Create New Article</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Miso - Share Your Voice</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Animated Background Elements -->
+  <div class="wavy-circle-first wavy-circle"></div>
+  <div class="wavy-circle-second wavy-circle"></div>
+  <div class="wavy-circle-third wavy-circle"></div>
+  
+  <!-- Header -->
+  <header class="navbar">
+    <a href="{{ url_for('home_after_login') }}" class="mi">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
+    </a>
+    <button class="toggle-button" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <nav class="navbar-links">
+      <ul>
+        <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+        <li><a href="{{ url_for('search') }}">Search</a></li>
+        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+        <li><a href="{{ url_for('create') }}">Create</a></li>
+        <li><a href="{{ url_for('logout') }}">Log out</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="title-line">Share your voice</span>
+        <span class="title-line">Discover new perspectives</span>
+      </h1>
+      <p class="hero-subtitle">Miso is where ideas meet readers. Write, read, and connect with a global community.</p>
+      <div class="cta-buttons">
+        <a href="{{ url_for('create') }}" class="cta-button primary">Create New Article</a>
+        <a href="{{ url_for('search') }}" class="cta-button secondary">
+          <i class="fas fa-search"></i> Explore Articles
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Categories Section -->
+  <section class="categories-section">
+    <div class="section-header">
+      <h2>Explore Topics</h2>
+      <p>Discover articles across diverse categories</p>
+    </div>
+    <div class="categories-grid">
+      {% for category in categories %}
+      <div class="category-card" style="--card-color: {{ category.color }};" 
+           onclick="window.location.href='{{ url_for('search', category=category.name) }}'">
+        <div class="category-icon">
+          <i class="{{ category.icon }}"></i>
         </div>
-        <section class="categories">
-            <div class="categories-header">
-              <h2>Explore Topics</h2>
-              <p>Discover articles across diverse categories</p>
-            </div>
-            <div class="categories-grid">
-                {% for category in categories %}
-                <div class="category-card" style="--card-color: {{ category.color }};" 
-                    onclick="window.location.href='{{ url_for('category_page', category_name=category.name) }}'">
-                    <h3>{{ category.name|capitalize }}</h3>
-                    <p class="category-desc">{{ category.description }}</p>
-                    <span class="article-count">{{ category.article_count }} articles</span>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-        <section class="popular-articles">
-            <div class="section-header">
-                <h2>Most Popular Articles</h2>
-                <p>What others are reading right now</p>
-            </div>
-            <div class="articles-grid">
-                {% for article in articles %}
-                <div class="card">
-                    <div class="header">
-                        <div class="image" style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) }}')">
-                            <span class="tag">{{ article.category }}</span>
-                        </div>
-                        <div class="date">
-                            <span>{{ article.date }}</span>
-                        </div>
-                    </div>
-                    <div class="info">
-                        <a href="{{ url_for('article_view', id=article.id) }}" class="block">
-                            <span class="title">{{ article.title }}</span>
-                        </a>
-                        <p class="description">{{ article.excerpt | safe}}</p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <a href="{{ url_for('search') }}" class="view-all">View All Popular Articles →</a>
-        </section>
-        <footer class="site-footer">
-            <div class="footer-content">
-                <div class="footer-links">
-                    <a href="{{ url_for('about_us') }}">About Us</a>
-                </div>
-                <div class="footer-links">
-                    <a href="{{ url_for('help') }}">help</a>
-                </div>
-                <p>Thank you for visiting our website! We appreciate your time and support.</p>
-            </div>
-        </footer>
-      <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-    </body>
+        <h3>{{ category.name|capitalize }}</h3>
+        <p class="category-desc">{{ category.description }}</p>
+        <span class="article-count">{{ category.article_count }} articles</span>
+        <div class="hover-effect"></div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  
+  <!-- Popular Articles -->
+  <section class="articles-section">
+    <div class="section-header">
+      <h2>Trending Articles</h2>
+      <p>What our community is reading right now</p>
+    </div>
+    <div class="articles-grid">
+      {% for article in articles %}
+      <article class="article-card">
+        <div class="article-image" style="background-image: url('{{ url_for('static', filename='uploads/' + article.image_url) }}')">
+          <span class="category-tag">{{ article.category }}</span>
+          <div class="article-meta">
+            <span class="date">{{ article.date }}</span>
+          </div>
+        </div>
+        <div class="article-content">
+          <h3 class="article-title">
+            <a href="{{ url_for('article_view', id=article.id) }}">{{ article.title }}</a>
+          </h3>
+          <p class="article-excerpt">{{ article.excerpt | safe }}</p>
+          <div class="article-footer">
+            <a href="{{ url_for('article_view', id=article.id) }}" class="read-more">
+              Read More <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="section-footer">
+      <a href="{{ url_for('search') }}" class="view-all">
+        View All Articles <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </section>
+  
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="section-header">
+      <h2>What Our Community Says</h2>
+      <p>Hear from writers and readers who love Miso</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>"Miso helped me find my voice and connect with readers who truly appreciate my perspective."</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar"><img src="../static/images/hh.jpg"></div>
+          <div class="author-info">
+            <h4>Boulahya Imane</h4>
+            <span>Writer & Photographer</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>"I've discovered so many amazing writers on Miso that I never would have found elsewhere."</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar"><img src="../static/images/hhh.jpg"></div>
+          <div class="author-info">
+            <h4>Rochdi Ouiam</h4>
+            <span>Avid Reader</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>"The community on Miso is so supportive and engaged. It's my favorite place to share my thoughts."</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar"><img src="../static/images/h.jpg"></div>
+          <div class="author-info">
+            <h4>Ouissal</h4>
+            <span>Poet & Essayist</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-column">
+        <h3>Miso</h3>
+        <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+      </div>
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+          <li><a href="{{ url_for('search') }}">Search</a></li>
+          <li><a href="{{ url_for('profile') }}">Profile</a></li>
+          <li><a href="{{ url_for('create') }}">Create</a></li>
+          <li><a href="{{ url_for('help') }}">Help</a></li>
+          <li><a href="{{ url_for('about_us') }}">About us</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Categories</h3>
+        <ul>
+          <li><a href="{{ url_for('search', category='technology') }}">Technology</a></li>
+          <li><a href="{{ url_for('search', category='health') }}">Health</a></li>
+          <li><a href="{{ url_for('search', category='art') }}">Art</a></li>
+          <li><a href="{{ url_for('search', category='culture') }}">Culture</a></li>
+          <li><a href="{{ url_for('search', category='sport') }}">Sport</a></li>
+          <li><a href="{{ url_for('search', category='economy') }}">Economy</a></li>
+          <li><a href="{{ url_for('search', category='entrepreneurship') }}">Entrepreneurship</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
 </html>

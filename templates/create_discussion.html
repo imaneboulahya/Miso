@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/search_page.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+        <title>Miso | Search</title>
+    </head>
+<body>
+    <!-- Header -->
+  <header class="navbar">
+    <a href="{{ url_for('home_after_login') }}" class="mi">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
+      <span class="logo-text">Miso</span>
+    </a>
+    <button class="toggle-button" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <nav class="navbar-links">
+      <ul>
+        <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+        <li><a href="{{ url_for('search') }}">Search</a></li>
+        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+        <li><a href="{{ url_for('create') }}">Create</a></li>
+        <li><a href="{{ url_for('logout') }}">Log out</a></li>
+      </ul>
+    </nav>
+  </header>
+
+    <div class="main-content">
+        <div class="create-form-container">
+            <h1>Start a New Discussion</h1>
+            
+            <form method="POST" enctype="multipart/form-data" class="discussion-form">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    {{ form.title.label }}
+                    {{ form.title(class="form-control") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.description.label }}
+                    {{ form.description(class="form-control", rows=5) }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.profile_pic.label }}
+                    {{ form.profile_pic(class="form-control-file") }}
+                </div>
+                
+                <div class="form-actions">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('discussions') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Miso</h3>
+                    <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                        <li><a href="{{ url_for('help') }}">Help</a></li>
+                        <li><a href="{{ url_for('about_us') }}">About us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="{{ url_for('category_be', category_name='technology') }}">Technology</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='health') }}">Health</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='art') }}">Art</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='culture') }}">Culture</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='sport') }}">Sport</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='economy') }}">Economy</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='entrepreneurship') }}">Entrepreneurship</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+</body>
+</html>

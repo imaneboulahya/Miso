@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <link rel="icon" href="{{ url_for('static', filename='images/Image.png') }}" type="image/png">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/search_page.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+        <title>Miso | Search</title>
+    </head>
+<body>
+     <!-- Header/Navigation -->
+    <header class="navbar">
+        <a href="{{ url_for('home_after_login') }}" class="mi">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Miso Logo" class="logo-img">
+        </a>
+        
+        <button class="toggle-button" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        
+        <nav class="navbar-links">
+            <ul>
+                <li><a href="{{ url_for('home_after_login') }}">Home</a></li>
+                <li><a href="{{ url_for('search') }}">Search</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('create') }}">Create</a></li>
+                <li><a href="{{ url_for('logout') }}">Log out</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Search and Categories Section -->
+        <div class="search-and-categories">
+            <!-- Search Container -->
+            <div class="search-container">
+                <form action="{{ url_for('discussions') }}" method="GET">
+                    <input type="text" name="q" placeholder="Search discussions..." class="search-input" value="{{ query or '' }}">
+                    <button type="submit" class="search-button">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+            
+            <!-- Search Filters -->
+            <div class="search-filter">
+                <button class="{% if active_tab != 'discussions' and active_tab != 'profiles' %}active{% endif %}">
+                    <a href="{{ url_for('search') }}">Articles</a>
+                </button>
+                <button class="{% if active_tab == 'discussions' %}active{% endif %}">
+                    <a href="{{ url_for('discussions') }}">Discussions</a>
+                </button>
+                <button class="{% if active_tab == 'profiles' %}active{% endif %}">
+                    <a href="{{ url_for('search_profiles') }}">Profiles</a>
+                </button>
+            </div>
+
+    <div class="main-content">
+        <div class="discussions-header">
+            <h1>Discussions</h1>
+            <a href="{{ url_for('create_discussion') }}" class="create-discussion-btn">
+                <i class="fas fa-plus"></i> Create Discussion
+            </a>
+        </div>
+
+        <div class="discussions-grid">
+            {% for discussion in discussions %}
+            <div class="discussion-card">
+                <a href="{{ url_for('view_discussion', id=discussion.id) }}">
+                    <div class="discussion-image" 
+                         style="background-image: url('{{ url_for('static', filename='uploads/' + discussion.profile_pic) if discussion.profile_pic != 'default_discussion.jpg' else url_for('static', filename='images/default_discussion.jpg') }}')">
+                    </div>
+                    <div class="discussion-info">
+                        <h3>{{ discussion.title }}</h3>
+                        <p class="discussion-description">{{ discussion.description }}</p>
+                        <div class="discussion-meta">
+                            <span>{{ discussion.messages|length }} messages</span>
+                            <span>{{ discussion.created_at.strftime('%b %d, %Y') }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="no-discussions">
+                <p>No discussions yet. Be the first to start one!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Miso</h3>
+                    <p>Your premier destination for quality content across various topics. Discover, learn, and engage with our community.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('search_be') }}">Search</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                        <li><a href="{{ url_for('help') }}">Help</a></li>
+                        <li><a href="{{ url_for('about_us') }}">About us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="{{ url_for('category_be', category_name='technology') }}">Technology</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='health') }}">Health</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='art') }}">Art</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='culture') }}">Culture</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='sport') }}">Sport</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='economy') }}">Economy</a></li>
+                        <li><a href="{{ url_for('category_be', category_name='entrepreneurship') }}">Entrepreneurship</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+</body>
+</html>
