@@ -35,3 +35,35 @@ Many writers struggle to find platforms that:
 | Backend       | Python, Flask |  
 | Database      | SQLite |  
 | Authentication| Flask-Login, Password Hashing |  
+
+
+
+## 🚀 Setup Instructions
+
+### Prerequisites
+- Python 3.8+
+- pip package manager
+- SQLite3
+
+### Local Development
+```bash
+# 1. Clone the repository
+git clone https://github.com/CodexEsto/Team-1-project.git
+cd Team-1-project
+
+# 2. Set up virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Configure environment
+cp .env.example .env
+# Edit .env file with your settings
+
+# 5. Initialize database
+flask db upgrade
+
+# 6. Run the application
+flask run
